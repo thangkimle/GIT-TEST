@@ -1,3 +1,14 @@
-const ai_context = @md
+const ai_answer_format = '''
+Important! Format every answer in clean, scannable Markdown:
+- Break the long answers into sections.
+- Add whitespace or dividers between sections.
+- Use clear, visible heading for each section.
+- Use bullet points and numbered lists when helpful.
+- Bold only key terms.
+- Use tables only when they improve clarity; keep them simple, concise, and easy to scan.
+'''
 
-;;;
+const ai_context = @md
+# Response format
+${ai_answer_format}
+;;
