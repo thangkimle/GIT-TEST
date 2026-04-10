@@ -25,14 +25,133 @@ Dataset ecommerce {
     relationship(ecommerce_cities.country_code > ecommerce_countries.code, true)
   ]
 
+  metric total_users {
+    label: 'Total Users'
+    type: 'number'
+    definition: @aql count(ecommerce_users.id) ;;
+  }
+
+  metric total_orders {
+    label: 'Total Orders'
+    type: 'number'
+    definition: @aql count(ecommerce_orders.id) ;;
+  }
+
+  metric total_order_items {
+    label: 'Total Order Items'
+    type: 'number'
+    definition: @aql count(ecommerce_order_items.order_id) ;;
+  }
+
+  metric total_quantity {
+    label: 'Total Quantity'
+    type: 'number'
+    definition: @aql sum(ecommerce_order_items.quantity) ;;
+  }
+
+  metric gmv {
+    label: 'GMV'
+    type: 'number'
+    definition: @aql ecommerce_order_items | sum(ecommerce_order_items.quantity * ecommerce_products.price) ;;
+  }
+
+  metric total_discount_amount {
+    label: 'Total Discount Amount'
+    type: 'number'
+    definition: @aql ecommerce_order_items | sum(ecommerce_order_items.quantity * ecommerce_products.price * ecommerce_orders.discount) ;;
+  }
+
+  metric net_merchandise_value {
+    label: 'Net Merchandise Value'
+    type: 'number'
+    definition: @aql gmv - total_discount_amount ;;
+  }
+
+  metric average_order_value {
+    label: 'Average Order Value'
+    type: 'number'
+    definition: @aql safe_divide(gmv, total_orders) ;;
+  }
+
+  metric average_items_per_order {
+    label: 'Average Items Per Order'
+    type: 'number'
+    definition: @aql safe_divide(total_quantity, total_orders) ;;
+  }
+
+  metric delivered_orders {
+    label: 'Delivered Orders'
+    type: 'number'
+    definition: @aql total_orders | where(ecommerce_orders.status == 'delivered') ;;
+  }
+
+  metric cancelled_orders {
+    label: 'Cancelled Orders'
+    type: 'number'
+    definition: @aql total_orders | where(ecommerce_orders.status == 'cancelled') ;;
+  }
+
+  metric refunded_orders {
+    label: 'Refunded Orders'
+    type: 'number'
+    definition: @aql total_orders | where(ecommerce_orders.status == 'refunded') ;;
+  }
+
+  metric delivered_order_rate {
+    label: 'Delivered Order Rate'
+    type: 'number'
+    definition: @aql safe_divide(delivered_orders, total_orders) ;;
+  }
+
+  metric cancelled_order_rate {
+    label: 'Cancelled Order Rate'
+    type: 'number'
+    definition: @aql safe_divide(cancelled_orders, total_orders) ;;
+  }
+
+  metric refunded_order_rate {
+    label: 'Refunded Order Rate'
+    type: 'number'
+    definition: @aql safe_divide(refunded_orders, total_orders) ;;
+  }
+
   view {
-    model ecommerce_orders { }
-    model ecommerce_order_items { }
-    model ecommerce_users { }
-    model ecommerce_products { }
-    model ecommerce_merchants { }
-    model ecommerce_categories { }
-    model ecommerce_cities { }
-    model ecommerce_countries { }
+    group core_metrics {
+      metric total_users
+      metric total_orders
+      metric total_order_items
+      metric total_quantity
+    }
+
+    group value_metrics {
+      metric gmv
+      metric total_discount_amount
+      metric net_merchandise_value
+      metric average_order_value
+      metric average_items_per_order
+    }
+
+    group status_metrics {
+      metric delivered_orders
+      metric cancelled_orders
+      metric refunded_orders
+      metric delivered_order_rate
+      metric cancelled_order_rate
+      metric refunded_order_rate
+    }
+
+    group commerce_models {
+      model ecommerce_orders { }
+      model ecommerce_order_items { }
+      model ecommerce_products { }
+      model ecommerce_categories { }
+      model ecommerce_merchants { }
+    }
+
+    group customer_models {
+      model ecommerce_users { }
+      model ecommerce_cities { }
+      model ecommerce_countries { }
+    }
   }
 }
