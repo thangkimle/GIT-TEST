@@ -1,0 +1,56 @@
+Dashboard ecommerce_overview {
+  title: 'Ecommerce Overview'
+  description: 'Starter dashboard for @Dataset:ecommerce with one chart.'
+
+  block v1: VizBlock {
+    label: 'Monthly Total Orders Trend'
+    viz: LineChart {
+      dataset: ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        label: 'Order Month'
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        label: 'Total Orders'
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce.total_orders)
+            label: 'Total Orders'
+            format {
+              type: 'number'
+              pattern: '#,###0.00'
+            }
+          }
+          settings {
+            color: '#2563EB'
+            line_interpolation: 'linear'
+          }
+        }
+      }
+      settings {
+        row_limit: 100
+        legend_label: 'hidden'
+        show_data_points: true
+        connect_discontinuous_points: false
+        sort: LineFamilySort {
+          type: 'xaxis'
+          direction: 'asc'
+        }
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'Overview'
+    width: 1200
+    height: 420
+    block v1 {
+      position: pos(20, 20, 1160, 360)
+    }
+  }
+}
