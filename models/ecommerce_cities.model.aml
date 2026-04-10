@@ -1,0 +1,34 @@
+Model ecommerce_cities {
+  type: 'table'
+  label: 'Cities'
+  description: 'Table model for ecommerce cities'
+  data_source_name: 'demodb'
+  table_name: '"ecommerce"."cities"'
+
+  dimension id {
+    label: 'City ID'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }};;
+  }
+
+  dimension name {
+    label: 'City Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.name }};;
+  }
+
+  dimension country_code {
+    label: 'Country Code'
+    type: 'text'
+    hidden: true
+    definition: @sql {{ #SOURCE.country_code }};;
+  }
+
+  measure total_cities {
+    label: 'Total Cities'
+    type: 'number'
+    definition: @sql {{ id }};;
+    aggregation_type: 'count'
+  }
+}

@@ -1,0 +1,33 @@
+Model ecommerce_countries {
+  type: 'table'
+  label: 'Countries'
+  description: 'Table model for ecommerce countries'
+  data_source_name: 'demodb'
+  table_name: '"ecommerce"."countries"'
+
+  dimension code {
+    label: 'Country Code'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.code }};;
+  }
+
+  dimension name {
+    label: 'Country Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.name }};;
+  }
+
+  dimension continent_name {
+    label: 'Continent Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.continent_name }};;
+  }
+
+  measure total_countries {
+    label: 'Total Countries'
+    type: 'number'
+    definition: @sql {{ code }};;
+    aggregation_type: 'count'
+  }
+}

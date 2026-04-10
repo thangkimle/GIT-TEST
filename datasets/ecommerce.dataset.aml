@@ -1,0 +1,38 @@
+Dataset ecommerce {
+  label: '[Demo] Ecommerce'
+  description: 'Dataset built from ecommerce schema tables: users, orders, order_items, products, merchants, categories, cities, countries.'
+  data_source_name: 'demodb'
+
+  models: [
+    ecommerce_users,
+    ecommerce_orders,
+    ecommerce_order_items,
+    ecommerce_products,
+    ecommerce_merchants,
+    ecommerce_categories,
+    ecommerce_cities,
+    ecommerce_countries
+  ]
+
+  relationships: [
+    relationship(ecommerce_orders.user_id > ecommerce_users.id, true),
+    relationship(ecommerce_order_items.order_id > ecommerce_orders.id, true),
+    relationship(ecommerce_order_items.product_id > ecommerce_products.id, true),
+    relationship(ecommerce_products.merchant_id > ecommerce_merchants.id, true),
+    relationship(ecommerce_products.category_id > ecommerce_categories.id, true),
+    relationship(ecommerce_users.city_id > ecommerce_cities.id, true),
+    relationship(ecommerce_merchants.city_id > ecommerce_cities.id, false),
+    relationship(ecommerce_cities.country_code > ecommerce_countries.code, true)
+  ]
+
+  view {
+    model ecommerce_orders { }
+    model ecommerce_order_items { }
+    model ecommerce_users { }
+    model ecommerce_products { }
+    model ecommerce_merchants { }
+    model ecommerce_categories { }
+    model ecommerce_cities { }
+    model ecommerce_countries { }
+  }
+}

@@ -1,0 +1,77 @@
+Model ecommerce_users {
+  type: 'table'
+  label: 'Users'
+  description: 'Table model for ecommerce users'
+  data_source_name: 'demodb'
+  table_name: '"ecommerce"."users"'
+
+  dimension id {
+    label: 'User ID'
+    type: 'number'
+    primary_key: true
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+
+  dimension sign_up_date {
+    label: 'Sign Up Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.sign_up_date }};;
+  }
+
+  dimension sign_up_at {
+    label: 'Sign Up At'
+    type: 'datetime'
+    definition: @sql {{ #SOURCE.sign_up_at }};;
+  }
+
+  dimension first_name {
+    label: 'First Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.first_name }};;
+  }
+
+  dimension last_name {
+    label: 'Last Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.last_name }};;
+  }
+
+  dimension email {
+    label: 'Email'
+    type: 'text'
+    definition: @sql {{ #SOURCE.email }};;
+  }
+
+  dimension birth_date {
+    label: 'Birth Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.birth_date }};;
+  }
+
+  dimension gender {
+    label: 'Gender'
+    type: 'text'
+    definition: @sql {{ #SOURCE.gender }};;
+  }
+
+  dimension city_id {
+    label: 'City ID'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.city_id }};;
+  }
+
+  dimension full_name {
+    label: 'Full Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.full_name }};;
+  }
+
+  measure total_users {
+    label: 'Total Users'
+    type: 'number'
+    definition: @sql {{ id }};;
+    aggregation_type: 'count'
+  }
+}

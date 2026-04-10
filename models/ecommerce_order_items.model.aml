@@ -1,0 +1,48 @@
+Model ecommerce_order_items {
+  type: 'table'
+  label: 'Order Items'
+  description: 'Table model for ecommerce order items'
+  data_source_name: 'demodb'
+  table_name: '"ecommerce"."order_items"'
+
+  dimension order_id {
+    label: 'Order ID'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.order_id }};;
+  }
+
+  dimension product_id {
+    label: 'Product ID'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.product_id }};;
+  }
+
+  dimension quantity {
+    label: 'Quantity'
+    type: 'number'
+    definition: @sql {{ #SOURCE.quantity }};;
+  }
+
+  measure total_order_items {
+    label: 'Total Order Items'
+    type: 'number'
+    definition: @sql {{ order_id }};;
+    aggregation_type: 'count'
+  }
+
+  measure total_quantity {
+    label: 'Total Quantity'
+    type: 'number'
+    definition: @sql {{ quantity }};;
+    aggregation_type: 'sum'
+  }
+
+  measure avg_quantity {
+    label: 'Average Quantity'
+    type: 'number'
+    definition: @sql {{ quantity }};;
+    aggregation_type: 'avg'
+  }
+}

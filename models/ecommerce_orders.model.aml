@@ -1,0 +1,73 @@
+Model ecommerce_orders {
+  type: 'table'
+  label: 'Orders'
+  description: 'Table model for ecommerce orders'
+  data_source_name: 'demodb'
+  table_name: '"ecommerce"."orders"'
+
+  dimension id {
+    label: 'Order ID'
+    type: 'number'
+    primary_key: true
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+
+  dimension status {
+    label: 'Status'
+    type: 'text'
+    definition: @sql {{ #SOURCE.status }};;
+  }
+
+  dimension created_at {
+    label: 'Created At'
+    type: 'datetime'
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  dimension user_id {
+    label: 'User ID'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.user_id }};;
+  }
+
+  dimension discount {
+    label: 'Discount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.discount }};;
+  }
+
+  dimension delivery_attempts {
+    label: 'Delivery Attempts'
+    type: 'number'
+    definition: @sql {{ #SOURCE.delivery_attempts }};;
+  }
+
+  dimension applied_promo_codes {
+    label: 'Applied Promo Codes'
+    type: 'text'
+    definition: @sql {{ #SOURCE.applied_promo_codes }}::text;;
+  }
+
+  measure total_orders {
+    label: 'Total Orders'
+    type: 'number'
+    definition: @sql {{ id }};;
+    aggregation_type: 'count'
+  }
+
+  measure avg_discount {
+    label: 'Average Discount'
+    type: 'number'
+    definition: @sql {{ discount }};;
+    aggregation_type: 'avg'
+  }
+
+  measure total_delivery_attempts {
+    label: 'Total Delivery Attempts'
+    type: 'number'
+    definition: @sql {{ delivery_attempts }};;
+    aggregation_type: 'sum'
+  }
+}

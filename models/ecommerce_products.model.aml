@@ -1,0 +1,93 @@
+Model ecommerce_products {
+  type: 'table'
+  label: 'Products'
+  description: 'Table model for ecommerce products'
+  data_source_name: 'demodb'
+  table_name: '"ecommerce"."products"'
+
+  dimension id {
+    label: 'Product ID'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }};;
+  }
+
+  dimension category_id {
+    label: 'Category ID'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.category_id }};;
+  }
+
+  dimension name {
+    label: 'Product Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.name }};;
+  }
+
+  dimension merchant_id {
+    label: 'Merchant ID'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.merchant_id }};;
+  }
+
+  dimension price {
+    label: 'Price'
+    type: 'number'
+    definition: @sql {{ #SOURCE.price }};;
+  }
+
+  dimension created_at {
+    label: 'Created At'
+    type: 'datetime'
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  dimension product_image_url {
+    label: 'Product Image URL'
+    type: 'text'
+    definition: @sql {{ #SOURCE.product_image_url }};;
+  }
+
+  dimension cost {
+    label: 'Cost'
+    type: 'number'
+    definition: @sql {{ #SOURCE.cost }};;
+  }
+
+  measure total_products {
+    label: 'Total Products'
+    type: 'number'
+    definition: @sql {{ id }};;
+    aggregation_type: 'count'
+  }
+
+  measure avg_price {
+    label: 'Average Price'
+    type: 'number'
+    definition: @sql {{ price }};;
+    aggregation_type: 'avg'
+  }
+
+  measure total_price {
+    label: 'Total Price'
+    type: 'number'
+    definition: @sql {{ price }};;
+    aggregation_type: 'sum'
+  }
+
+  measure avg_cost {
+    label: 'Average Cost'
+    type: 'number'
+    definition: @sql {{ cost }};;
+    aggregation_type: 'avg'
+  }
+
+  measure total_cost {
+    label: 'Total Cost'
+    type: 'number'
+    definition: @sql {{ cost }};;
+    aggregation_type: 'sum'
+  }
+}

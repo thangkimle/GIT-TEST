@@ -1,0 +1,66 @@
+Model ecommerce_categories {
+  type: 'table'
+  label: 'Categories'
+  description: 'Table model for ecommerce categories'
+  data_source_name: 'demodb'
+  table_name: '"ecommerce"."categories"'
+
+  dimension id {
+    label: 'Category ID'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }};;
+  }
+
+  dimension name {
+    label: 'Category Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.name }};;
+  }
+
+  dimension parent_id {
+    label: 'Parent Category ID'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.parent_id }};;
+  }
+
+  dimension min_price {
+    label: 'Min Price'
+    type: 'number'
+    definition: @sql {{ #SOURCE.min_price }};;
+  }
+
+  dimension max_price {
+    label: 'Max Price'
+    type: 'number'
+    definition: @sql {{ #SOURCE.max_price }};;
+  }
+
+  dimension category_image_url {
+    label: 'Category Image URL'
+    type: 'text'
+    definition: @sql {{ #SOURCE.category_image_url }};;
+  }
+
+  measure total_categories {
+    label: 'Total Categories'
+    type: 'number'
+    definition: @sql {{ id }};;
+    aggregation_type: 'count'
+  }
+
+  measure avg_min_price {
+    label: 'Average Min Price'
+    type: 'number'
+    definition: @sql {{ min_price }};;
+    aggregation_type: 'avg'
+  }
+
+  measure avg_max_price {
+    label: 'Average Max Price'
+    type: 'number'
+    definition: @sql {{ max_price }};;
+    aggregation_type: 'avg'
+  }
+}
