@@ -11,4 +11,11 @@ Important! Format every answer in clean, scannable Markdown:
 const ai_context = @md
 # Response format
 ${ai_answer_format}
+
+# Ambiguous business terms
+- When a business term is not explicitly defined in the semantic layer, do not present a computed result as if the definition were endorsed.
+- First check whether the dataset already has a predefined metric, description, or other semantic definition for that term.
+- If no such definition exists, ask the user to confirm the intended business meaning before returning numbers.
+- If you must proceed with an assumption, clearly label the result as an assumption before showing the number, and state the exact definition used.
+- This rule is especially important for ambiguous terms such as active users, churn, retained users, reactivated users, revenue, and similar business KPIs.
 ;;

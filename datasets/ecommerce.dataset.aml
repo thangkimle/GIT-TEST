@@ -31,6 +31,16 @@ Dataset ecommerce {
     definition: @aql count(ecommerce_users.id) ;;
   }
 
+  metric active_users {
+    label: 'Active Users'
+    type: 'number'
+    definition: @aql ecommerce_orders | count_distinct(ecommerce_users.id) ;;
+    description: '''Counts distinct users who placed at least one order.
+Base formula only: time windows such as DAU, WAU, and MAU should be produced by applying report or query filters on `ecommerce_orders.created_at`.
+In this dataset, "activity" is defined as order placement, not sessions or other events.
+'''
+  }
+
   metric total_orders {
     label: 'Total Orders'
     type: 'number'
@@ -118,6 +128,7 @@ Dataset ecommerce {
   view {
     group core_metrics {
       metric total_users
+      metric active_users
       metric total_orders
       metric total_order_items
       metric total_quantity
