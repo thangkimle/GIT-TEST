@@ -1,7 +1,7 @@
-Dashboard html_tabbed_report {
+Dashboard html_tabbed_report_temp {
   title: 'Tabbed Report'
   description: ''
-  owner: 'thong.do@holistics.io'
+  owner: 'di.hoang@holistics.io'
 
 
   view: HTMLLayout {

@@ -1,7 +1,7 @@
 Dashboard html_responsive {
   title: 'Responsive Dashboard'
   description: ''
-  owner: 'thong.do@holistics.io'
+  owner: 'di.hoang@holistics.io'
   block title: TextBlock {
     content: @md # Responsive Dashboard ;;
   }

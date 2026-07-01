@@ -1,7 +1,7 @@
-Dashboard html_tabbed_report_pro {
-  title: 'Tabbed Report pro'
+Dashboard html_tabbed_report {
+  title: 'Tabbed Report'
   description: ''
-  owner: 'thong.do@holistics.io'
+  owner: 'di.hoang@holistics.io'
 
   theme: my_theme
   block v_tab_trend: VizBlock {
