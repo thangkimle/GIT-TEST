@@ -1,5 +1,5 @@
-Dataset ecommerce {
-  label: '[Demo] Ecommerce'
+Dataset ecommerce_demo {
+  label: 'Ecommerce Demo'
   description: 'Dataset built from ecommerce schema tables: users, orders, order_items, products, merchants, categories, cities, countries.'
   data_source_name: 'demodb'
 

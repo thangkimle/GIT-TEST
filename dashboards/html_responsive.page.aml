@@ -1,0 +1,871 @@
+Dashboard html_responsive {
+  title: 'Responsive Dashboard'
+  description: ''
+  owner: 'thong.do@holistics.io'
+  block title: TextBlock {
+    content: @md # Responsive Dashboard ;;
+  }
+  block v_signup: VizBlock {
+    label: 'Users signup'
+    viz: ColumnChart {
+      dataset: ecommerce
+      calculation count_of_users_id {
+        label: 'Count of Users Id'
+        formula: @aql count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_users.sign_up_date)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_users_id'
+            format {
+              type: 'number'
+              pattern: 'none'
+            }
+          }
+          settings {
+            color: '#ea580c'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_monthly: VizBlock {
+    label: 'Monthly signups'
+    viz: ColumnChart {
+      dataset: ecommerce
+      calculation count_of_users_id {
+        label: 'Count of Users Id'
+        formula: @aql count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_users.sign_up_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'yyyy MMM'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_users_id'
+            format {
+              type: 'number'
+              pattern: 'none'
+            }
+          }
+          settings {
+            color: '#0284c7'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_yearly: VizBlock {
+    label: 'Yearly signups'
+    viz: ColumnChart {
+      dataset: ecommerce
+      calculation count_of_users_id {
+        label: 'Count of Users Id'
+        formula: @aql count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_users.sign_up_date)
+        transformation: 'datetrunc year'
+        format {
+          type: 'date'
+          pattern: 'yyyy'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_users_id'
+            format {
+              type: 'number'
+              pattern: 'none'
+            }
+          }
+          settings {
+            color: '#7c3aed'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+
+  block v_conversion: VizBlock {
+    label: 'Conversion'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce.net_sales_margin)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_metric_kpi: VizBlock {
+    label: 'Gross Sales'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce.gross_sales)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+
+  view: HTMLLayout {
+    content: @html
+<!-- ============================================================
+  Asymmetric Bento Dashboard — Light/Clean
+  Pure HTML/CSS, no JS, scoped via .bento-root prefix
+  Demonstrates responsiveness: resize the window to see the
+  layout reflow at 3 breakpoints (>1100px, 700–1100px, <700px)
+============================================================ -->
+
+<div class="bento-root">
+  <style>
+    /* ---------- Reset (scoped via prefix) ---------- */
+    .bento-root,
+    .bento-root *,
+    .bento-root *::before,
+    .bento-root *::after { box-sizing: border-box; }
+
+    /* ---------- Root container & tokens ---------- */
+    .bento-root {
+      /* Surfaces */
+      --b-bg:        #f5f5f4;
+      --b-card:      #ffffff;
+      --b-card-alt:  #fafaf9;
+      --b-ink:       #1c1917;
+      --b-ink-soft:  #57534e;
+      --b-ink-faint: #a8a29e;
+      --b-line:      #e7e5e4;
+
+      /* Accents */
+      --b-orange: #ea580c;
+      --b-blue:   #0284c7;
+      --b-green:  #16a34a;
+      --b-purple: #7c3aed;
+      --b-pink:   #ec4899;
+      --b-yellow: #fbbf24;
+
+      --b-radius:  20px;
+      --b-radius-sm: 12px;
+      --b-gap: 14px;
+
+      --b-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+      --b-font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      --b-font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+      display: block;
+      font-family: var(--b-font-sans);
+      color: var(--b-ink);
+      background: var(--b-bg);
+      padding: 32px;
+      border-radius: var(--b-radius);
+      position: relative;
+      min-height: 600px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .bento-root .b-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .bento-root .b-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .bento-root .b-logo {
+      font-family: var(--b-font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--b-ink);
+    }
+    .bento-root .b-logo-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--b-orange);
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 2px;
+    }
+    .bento-root .b-tag {
+      font-family: var(--b-font-mono);
+      font-size: 11px;
+      color: var(--b-ink-soft);
+      background: var(--b-card);
+      border: 1px solid var(--b-line);
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Breakpoint indicator — shows current active layout */
+    .bento-root .b-bp-indicator {
+      display: flex;
+      gap: 6px;
+      font-family: var(--b-font-mono);
+      font-size: 11px;
+    }
+    .bento-root .b-bp-dot {
+      padding: 5px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--b-line);
+      background: var(--b-card);
+      color: var(--b-ink-faint);
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---------- BENTO GRID ---------- */
+    .bento-root .b-grid {
+      display: grid;
+      gap: var(--b-gap);
+
+      /* Desktop: asymmetric grid */
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: 140px;
+      grid-template-areas:
+        "hero hero hero hero stat1 stat1"
+        "hero hero hero hero stat2 stat2"
+        "chart chart team team activity activity"
+        "chart chart team team activity activity"
+        "metric metric chart2 chart2 chart2 chart2"
+        "metric metric chart2 chart2 chart2 chart2";
+    }
+
+    .bento-root .b-tile {
+      background: var(--b-card);
+      border: 1px solid var(--b-line);
+      border-radius: var(--b-radius);
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.25s ease,
+                  border-color 0.25s ease;
+      animation: b-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .bento-root .b-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px -10px rgba(0,0,0,0.12);
+      border-color: var(--b-ink-faint);
+    }
+
+    /* Staggered entrance */
+    .bento-root .b-tile:nth-child(1) { animation-delay: 0.05s; }
+    .bento-root .b-tile:nth-child(2) { animation-delay: 0.10s; }
+    .bento-root .b-tile:nth-child(3) { animation-delay: 0.15s; }
+    .bento-root .b-tile:nth-child(4) { animation-delay: 0.20s; }
+    .bento-root .b-tile:nth-child(5) { animation-delay: 0.25s; }
+    .bento-root .b-tile:nth-child(6) { animation-delay: 0.30s; }
+    .bento-root .b-tile:nth-child(7) { animation-delay: 0.35s; }
+    .bento-root .b-tile:nth-child(8) { animation-delay: 0.40s; }
+
+    @keyframes b-fade-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ----- grid area assignments ----- */
+    .bento-root .b-tile.area-hero     { grid-area: hero;     }
+    .bento-root .b-tile.area-stat1    { grid-area: stat1;    }
+    .bento-root .b-tile.area-stat2    { grid-area: stat2;    }
+    .bento-root .b-tile.area-chart    { grid-area: chart;    }
+    .bento-root .b-tile.area-team     { grid-area: team;     }
+    .bento-root .b-tile.area-activity { grid-area: activity; }
+    .bento-root .b-tile.area-metric   { grid-area: metric;   }
+    .bento-root .b-tile.area-chart2   { grid-area: chart2;   }
+
+    /* ============================================================
+       BREAKPOINTS
+    ============================================================ */
+
+    /* Tablet — simplified asymmetry */
+    @media (max-width: 1100px) {
+      .bento-root .b-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 140px;
+        grid-template-areas:
+          "hero hero hero stat1"
+          "hero hero hero stat2"
+          "chart chart team team"
+          "chart chart team team"
+          "activity activity metric metric"
+          "chart2 chart2 chart2 chart2"
+          "chart2 chart2 chart2 chart2";
+      }
+    }
+
+    /* Mobile — single column */
+    @media (max-width: 700px) {
+      .bento-root { padding: 18px; }
+      .bento-root .b-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+        grid-template-areas:
+          "hero"
+          "stat1"
+          "stat2"
+          "chart"
+          "team"
+          "activity"
+          "metric"
+          "chart2";
+      }
+      .bento-root .b-tile { min-height: 160px; }
+      .bento-root .b-tile.area-hero { min-height: 240px; }
+    }
+
+    /* Breakpoint indicator active states */
+    .bento-root .b-bp-dot.bp-desktop { background: var(--b-ink); color: white; border-color: var(--b-ink); }
+    @media (max-width: 1100px) {
+      .bento-root .b-bp-dot.bp-desktop { background: var(--b-card); color: var(--b-ink-faint); border-color: var(--b-line); }
+      .bento-root .b-bp-dot.bp-tablet  { background: var(--b-ink); color: white; border-color: var(--b-ink); }
+    }
+    @media (max-width: 700px) {
+      .bento-root .b-bp-dot.bp-tablet { background: var(--b-card); color: var(--b-ink-faint); border-color: var(--b-line); }
+      .bento-root .b-bp-dot.bp-mobile { background: var(--b-ink); color: white; border-color: var(--b-ink); }
+    }
+
+    /* ============================================================
+       TILE-SPECIFIC CONTENT STYLES
+    ============================================================ */
+
+    /* ----- HERO ----- */
+    .bento-root .b-tile.area-hero {
+      background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+      color: white;
+      border-color: transparent;
+      justify-content: space-between;
+    }
+    .bento-root .b-tile.area-hero::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(234, 88, 12, 0.4), transparent 60%);
+      pointer-events: none;
+    }
+    .bento-root .b-hero-eyebrow {
+      font-family: var(--b-font-mono);
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      position: relative;
+      z-index: 1;
+    }
+    .bento-root .b-hero-headline {
+      font-family: var(--b-font-display);
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .bento-root .b-hero-headline span {
+      background: linear-gradient(120deg, var(--b-orange), var(--b-yellow));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .bento-root .b-hero-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+    .bento-root .b-hero-stat {
+      font-family: var(--b-font-mono);
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+    .bento-root .b-hero-stat b {
+      display: block;
+      font-family: var(--b-font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 2px;
+    }
+
+    /* ----- STAT TILES ----- */
+    .bento-root .b-stat-label {
+      font-family: var(--b-font-mono);
+      font-size: 10px;
+      color: var(--b-ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+    .bento-root .b-stat-value {
+      font-family: var(--b-font-display);
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .bento-root .b-stat-delta {
+      font-family: var(--b-font-mono);
+      font-size: 11px;
+      margin-top: auto;
+      padding-top: 12px;
+    }
+    .bento-root .b-stat-delta.up   { color: var(--b-green); }
+    .bento-root .b-stat-delta.down { color: var(--b-orange); }
+
+    .bento-root .b-tile.area-stat1 { background: linear-gradient(135deg, #dbeafe 0%, #ffffff 100%); }
+    .bento-root .b-tile.area-stat2 { background: linear-gradient(135deg, #dcfce7 0%, #ffffff 100%); }
+
+    /* ----- CHART tiles ----- */
+    .bento-root .b-card-eyebrow {
+      font-family: var(--b-font-mono);
+      font-size: 10px;
+      color: var(--b-ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+    .bento-root .b-card-title {
+      font-family: var(--b-font-display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px 0;
+    }
+    .bento-root .b-chart {
+      flex: 1;
+      min-height: 80px;
+      border: 1px dashed var(--b-line);
+      border-radius: var(--b-radius-sm);
+      background-color: var(--b-card-alt);
+      background-image:
+        linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+      background-size: 24px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .bento-root .b-chart-icon {
+      font-size: 20px;
+      opacity: 0.5;
+    }
+    .bento-root .b-chart-label {
+      font-family: var(--b-font-mono);
+      font-size: 10px;
+      color: var(--b-ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .bento-root .b-chart::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(234, 88, 12, 0.06), transparent);
+      animation: b-scan 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes b-scan {
+      0%, 100% { transform: translateX(-100%); }
+      50%      { transform: translateX(100%); }
+    }
+
+    /* ----- TEAM tile ----- */
+    .bento-root .b-tile.area-team {
+      background: linear-gradient(135deg, #fef3c7 0%, #ffffff 100%);
+    }
+    .bento-root .b-avatars {
+      display: flex;
+      margin-top: 14px;
+    }
+    .bento-root .b-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 3px solid white;
+      margin-left: -10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--b-font-display);
+      font-weight: 600;
+      font-size: 14px;
+      color: white;
+    }
+    .bento-root .b-avatar:first-child { margin-left: 0; }
+    .bento-root .b-avatar.a1 { background: var(--b-orange); }
+    .bento-root .b-avatar.a2 { background: var(--b-blue); }
+    .bento-root .b-avatar.a3 { background: var(--b-purple); }
+    .bento-root .b-avatar.a4 { background: var(--b-pink); }
+    .bento-root .b-avatar.a5 {
+      background: var(--b-card);
+      color: var(--b-ink-soft);
+      border-color: var(--b-line);
+      font-size: 12px;
+    }
+    .bento-root .b-team-meta {
+      margin-top: auto;
+      font-family: var(--b-font-mono);
+      font-size: 11px;
+      color: var(--b-ink-soft);
+      padding-top: 14px;
+    }
+
+    /* ----- ACTIVITY tile ----- */
+    .bento-root .b-tile.area-activity {
+      background: var(--b-card-alt);
+    }
+    .bento-root .b-feed {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-family: var(--b-font-mono);
+      font-size: 12px;
+      overflow: hidden;
+    }
+    .bento-root .b-feed-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--b-ink-soft);
+    }
+    .bento-root .b-feed-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .bento-root .b-feed-dot.c1 { background: var(--b-green); }
+    .bento-root .b-feed-dot.c2 { background: var(--b-blue); }
+    .bento-root .b-feed-dot.c3 { background: var(--b-purple); }
+    .bento-root .b-feed-dot.c4 { background: var(--b-orange); }
+    .bento-root .b-feed-item b {
+      color: var(--b-ink);
+      font-weight: 500;
+    }
+    .bento-root .b-feed-time {
+      font-size: 10px;
+      color: var(--b-ink-faint);
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    /* ----- METRIC tile (big number) ----- */
+    .bento-root .b-tile.area-metric {
+      background: linear-gradient(135deg, var(--b-orange) 0%, #f97316 100%);
+      color: white;
+      border-color: transparent;
+      justify-content: space-between;
+    }
+    .bento-root .b-tile.area-metric::before {
+      content: "";
+      position: absolute;
+      top: -30%;
+      right: -30%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%);
+      pointer-events: none;
+    }
+    .bento-root .b-metric-eyebrow {
+      font-family: var(--b-font-mono);
+      font-size: 10px;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      position: relative;
+      z-index: 1;
+    }
+    .bento-root .b-metric-value {
+      font-family: var(--b-font-display);
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+    .bento-root .b-metric-foot {
+      font-family: var(--b-font-mono);
+      font-size: 11px;
+      color: rgba(255,255,255,0.85);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ----- KPI inherits stat2 tile style (green gradient, ink text) ----- */
+    .bento-root .b-stat-value .h-kpi-metric-kpi,
+    .bento-root .b-stat-value .h-kpi-metric-kpi * {
+      font-family: var(--b-font-display) !important;
+      font-size: clamp(28px, 3.5vw, 40px) !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.03em !important;
+      line-height: 1 !important;
+      color: var(--b-ink) !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* ----- KPI inherits metric tile style (orange bg, white text) ----- */
+    .bento-root .b-metric-value .h-kpi-metric-kpi,
+    .bento-root .b-metric-value .h-kpi-metric-kpi * {
+      font-family: var(--b-font-display) !important;
+      font-size: clamp(36px, 5vw, 56px) !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.04em !important;
+      line-height: 1 !important;
+      color: white !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* ----- Live chart overrides ----- */
+    .bento-root .b-chart.b-chart-live {
+      border: none;
+      background: transparent;
+      background-image: none;
+      animation: none;
+      align-items: stretch;
+      justify-content: stretch;
+      padding: 0;
+    }
+    .bento-root .b-chart.b-chart-live::after { display: none; }
+    .bento-root .b-chart.b-chart-live * {
+      background: transparent !important;
+    }
+    .bento-root .b-chart.b-chart-mini {
+      flex: 1;
+      min-height: 80px;
+    }
+  </style>
+
+  <!-- =================== TOP BAR =================== -->
+  <div class="b-topbar">
+    <div class="b-brand">
+      <div class="b-logo"><span class="b-logo-dot"></span>bento</div>
+      <span class="b-tag">Responsive demo</span>
+    </div>
+    <div class="b-bp-indicator">
+      <span class="b-bp-dot bp-desktop">DESKTOP &gt;1100</span>
+      <span class="b-bp-dot bp-tablet">TABLET 700-1100</span>
+      <span class="b-bp-dot bp-mobile">MOBILE &lt;700</span>
+    </div>
+  </div>
+
+  <!-- =================== BENTO GRID =================== -->
+  <div class="b-grid">
+
+    <!-- HERO tile -->
+    <div class="b-tile area-hero">
+      <div class="b-hero-eyebrow">Q2 2026 · Performance</div>
+      <h2 class="b-hero-headline">Revenue is up <span>+24%</span> this quarter.</h2>
+      <div class="b-hero-row">
+        <div class="b-hero-stat"><b>$4.2M</b>Total revenue</div>
+        <div class="b-hero-stat"><b>12,480</b>Active customers</div>
+        <div class="b-hero-stat"><b>98.4%</b>Uptime</div>
+      </div>
+    </div>
+
+    <!-- STAT 1 -->
+    <div class="b-tile area-stat1">
+      <div class="b-stat-label">Monthly Signups</div>
+      <div class="b-chart b-chart-live b-chart-mini">
+        <h-block name="v_monthly" />
+      </div>
+    </div>
+
+    <!-- STAT 2 -->
+    <div class="b-tile area-stat2">
+      <div class="b-stat-label">Net Sales Margin</div>
+      <div class="b-stat-value">
+        <h-block name="v_conversion" />
+      </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="b-tile area-chart">
+      <div class="b-card-eyebrow">Trend</div>
+      <h3 class="b-card-title">Revenue this quarter</h3>
+      <div class="b-chart b-chart-live">
+        <h-block name="v_signup" />
+      </div>
+    </div>
+
+    <!-- TEAM -->
+    <div class="b-tile area-team">
+      <div class="b-card-eyebrow">Collaboration</div>
+      <h3 class="b-card-title">Active team</h3>
+      <div class="b-avatars">
+        <div class="b-avatar a1">MR</div>
+        <div class="b-avatar a2">JL</div>
+        <div class="b-avatar a3">SK</div>
+        <div class="b-avatar a4">AN</div>
+        <div class="b-avatar a5">+8</div>
+      </div>
+      <div class="b-team-meta">12 members · 4 online now</div>
+    </div>
+
+    <!-- ACTIVITY -->
+    <div class="b-tile area-activity">
+      <div class="b-card-eyebrow">Live feed</div>
+      <h3 class="b-card-title">Recent activity</h3>
+      <div class="b-feed">
+        <div class="b-feed-item">
+          <span class="b-feed-dot c1"></span>
+          <span><b>Maria</b> closed deal #4821</span>
+          <span class="b-feed-time">2m</span>
+        </div>
+        <div class="b-feed-item">
+          <span class="b-feed-dot c2"></span>
+          <span><b>James</b> updated forecast</span>
+          <span class="b-feed-time">8m</span>
+        </div>
+        <div class="b-feed-item">
+          <span class="b-feed-dot c3"></span>
+          <span><b>Sara</b> published report</span>
+          <span class="b-feed-time">14m</span>
+        </div>
+        <div class="b-feed-item">
+          <span class="b-feed-dot c4"></span>
+          <span><b>Alex</b> flagged risk</span>
+          <span class="b-feed-time">22m</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- METRIC (orange feature) -->
+    <div class="b-tile area-metric">
+      <div class="b-metric-eyebrow">Gross Sales</div>
+      <div class="b-metric-value">
+        <h-block name="v_metric_kpi" />
+      </div>
+      <div class="b-metric-foot">Total value of all products sold</div>
+    </div>
+
+    <!-- CHART 2 -->
+    <div class="b-tile area-chart2">
+      <div class="b-card-eyebrow">Channels</div>
+      <h3 class="b-card-title">Acquisition breakdown</h3>
+      <div class="b-chart b-chart-live">
+        <h-block name="v_yearly" />
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    ;;
+  }
+
+  theme: my_theme
+}

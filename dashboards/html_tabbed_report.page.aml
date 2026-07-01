@@ -1,0 +1,420 @@
+Dashboard html_tabbed_report {
+  title: 'Tabbed Report'
+  description: ''
+  owner: 'thong.do@holistics.io'
+
+
+  view: HTMLLayout {
+    content: @html
+
+      <!-- ============================================================
+  Tabbed Dashboard — Pure HTML/CSS, no JS, no @scope, no radios
+  Isolation: every selector is prefixed with .db-root
+  Tabs: :target via anchor links (sanitizer-safe)
+  Layout trick: panels precede tabs in DOM (for sibling selector),
+                but flex `order` puts tabs visually at the top.
+============================================================ -->
+
+<div class="db-root">
+  <style>
+    /* ---------- Reset (scoped via prefix) ---------- */
+    .db-root,
+    .db-root *,
+    .db-root *::before,
+    .db-root *::after { box-sizing: border-box; }
+
+    /* ---------- Root container & tokens ---------- */
+    .db-root {
+      --db-bg: #ffffff;
+      --db-surface: #f8fafc;
+      --db-border: #e2e8f0;
+      --db-text: #0f172a;
+      --db-text-muted: #64748b;
+      --db-primary: #2563eb;
+      --db-primary-soft: #eff6ff;
+      --db-radius: 10px;
+      --db-gap: 16px;
+
+      display: flex;
+      flex-direction: column;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--db-text);
+      background: var(--db-bg);
+      padding: 24px;
+      border-radius: var(--db-radius);
+    }
+
+    /* Visual order: header, tabs, then panels — even though panels come first in DOM */
+    .db-root .db-header { order: 1; }
+    .db-root .db-tabs   { order: 2; }
+    .db-root .db-panel  { order: 3; }
+
+    /* ---------- Header ---------- */
+    .db-root .db-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .db-root .db-title { font-size: 22px; font-weight: 600; margin: 0; }
+    .db-root .db-subtitle { font-size: 13px; color: var(--db-text-muted); margin: 0; }
+
+    /* ---------- Tabs ---------- */
+    .db-root .db-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--db-border);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .db-root .db-tab {
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--db-text-muted);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      user-select: none;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+    }
+    .db-root .db-tab:hover {
+      color: var(--db-text);
+      background: var(--db-surface);
+    }
+
+    /* ---------- Panels: hidden by default ---------- */
+    .db-root .db-panel {
+      display: none;
+      /* Prevent the browser from jump-scrolling to the panel on hash change */
+      scroll-margin-top: 9999px;
+    }
+
+    /* Show panel when its ID matches URL hash */
+    .db-root .db-panel:target { display: block; }
+
+    /* Active tab styling — when target panel is set, highlight matching tab */
+    .db-root #db-panel-overview:target ~ .db-tabs a[href="#db-panel-overview"],
+    .db-root #db-panel-revenue:target  ~ .db-tabs a[href="#db-panel-revenue"],
+    .db-root #db-panel-users:target    ~ .db-tabs a[href="#db-panel-users"],
+    .db-root #db-panel-reports:target  ~ .db-tabs a[href="#db-panel-reports"] {
+      color: var(--db-primary);
+      border-bottom-color: var(--db-primary);
+      background: var(--db-primary-soft);
+    }
+
+    /* Default state (no hash) — show Overview panel + active tab.
+       Requires :has() support (Chrome/Edge/Safari modern, Firefox 121+). */
+    .db-root:not(:has(.db-panel:target)) #db-panel-overview { display: block; }
+    .db-root:not(:has(.db-panel:target)) .db-tabs a[href="#db-panel-overview"] {
+      color: var(--db-primary);
+      border-bottom-color: var(--db-primary);
+      background: var(--db-primary-soft);
+    }
+
+    /* ---------- KPI cards ---------- */
+    .db-root .db-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--db-gap);
+      margin-bottom: var(--db-gap);
+    }
+    .db-root .db-kpi {
+      background: var(--db-surface);
+      border: 1px solid var(--db-border);
+      border-radius: var(--db-radius);
+      padding: 16px;
+    }
+    .db-root .db-kpi-label {
+      font-size: 12px;
+      color: var(--db-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .db-root .db-kpi-value { font-size: 24px; font-weight: 600; }
+    .db-root .db-kpi-delta { font-size: 12px; margin-top: 4px; }
+    .db-root .db-kpi-delta.up   { color: #16a34a; }
+    .db-root .db-kpi-delta.down { color: #dc2626; }
+
+    /* ---------- Chart grid ---------- */
+    .db-root .db-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--db-gap);
+    }
+    .db-root .db-card {
+      background: var(--db-bg);
+      border: 1px solid var(--db-border);
+      border-radius: var(--db-radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .db-root .db-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+    .db-root .db-card-title { font-size: 14px; font-weight: 600; margin: 0; }
+    .db-root .db-card-meta  { font-size: 12px; color: var(--db-text-muted); }
+
+    .db-root .db-col-12 { grid-column: span 12; }
+    .db-root .db-col-8  { grid-column: span 8; }
+    .db-root .db-col-6  { grid-column: span 6; }
+    .db-root .db-col-4  { grid-column: span 4; }
+
+    @media (max-width: 768px) {
+      .db-root .db-col-8,
+      .db-root .db-col-6,
+      .db-root .db-col-4 { grid-column: span 12; }
+    }
+
+    /* ---------- Chart placeholders ---------- */
+    .db-root .db-chart-placeholder {
+      flex: 1;
+      min-height: 220px;
+      border: 1px dashed var(--db-border);
+      border-radius: 8px;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          var(--db-surface),
+          var(--db-surface) 10px,
+          #f1f5f9 10px,
+          #f1f5f9 20px
+        );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--db-text-muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .db-root .db-chart-placeholder.tall  { min-height: 320px; }
+    .db-root .db-chart-placeholder.short { min-height: 160px; }
+
+    /* ---------- Table ---------- */
+    .db-root .db-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .db-root .db-table th,
+    .db-root .db-table td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--db-border);
+    }
+    .db-root .db-table th {
+      font-weight: 600;
+      color: var(--db-text-muted);
+      background: var(--db-surface);
+    }
+    .db-root .db-table tr:last-child td { border-bottom: none; }
+  </style>
+
+  <header class="db-header">
+    <div>
+      <h2 class="db-title">Analytics Dashboard</h2>
+      <p class="db-subtitle">Overview of key metrics and performance indicators</p>
+    </div>
+  </header>
+
+  <!--
+    NOTE: Panels are placed BEFORE the tabs in DOM order so that
+    the `:target ~ .db-tabs a` sibling selector can match.
+    They're visually reordered to appear below the tabs using flex `order`.
+  -->
+
+  <section class="db-panel" id="db-panel-overview">
+    <div class="db-kpis">
+      <div class="db-kpi">
+        <div class="db-kpi-label">Total Revenue</div>
+        <div class="db-kpi-value">$248,329</div>
+        <div class="db-kpi-delta up">▲ 12.4% vs last month</div>
+      </div>
+      <div class="db-kpi">
+        <div class="db-kpi-label">Active Users</div>
+        <div class="db-kpi-value">18,492</div>
+        <div class="db-kpi-delta up">▲ 4.1%</div>
+      </div>
+      <div class="db-kpi">
+        <div class="db-kpi-label">Conversion</div>
+        <div class="db-kpi-value">3.82%</div>
+        <div class="db-kpi-delta down">▼ 0.6%</div>
+      </div>
+      <div class="db-kpi">
+        <div class="db-kpi-label">Avg. Order</div>
+        <div class="db-kpi-value">$84.21</div>
+        <div class="db-kpi-delta up">▲ 2.3%</div>
+      </div>
+    </div>
+
+    <div class="db-grid">
+      <div class="db-card db-col-8">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Revenue Trend</h3>
+          <span class="db-card-meta">Last 30 days</span>
+        </div>
+        <div class="db-chart-placeholder tall">Line Chart Placeholder</div>
+      </div>
+      <div class="db-card db-col-4">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Traffic Sources</h3>
+          <span class="db-card-meta">This week</span>
+        </div>
+        <div class="db-chart-placeholder tall">Donut Chart Placeholder</div>
+      </div>
+      <div class="db-card db-col-6">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Top Products</h3>
+          <span class="db-card-meta">By units</span>
+        </div>
+        <div class="db-chart-placeholder">Bar Chart Placeholder</div>
+      </div>
+      <div class="db-card db-col-6">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Geographic Distribution</h3>
+          <span class="db-card-meta">All time</span>
+        </div>
+        <div class="db-chart-placeholder">Map Placeholder</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="db-panel" id="db-panel-revenue">
+    <div class="db-kpis">
+      <div class="db-kpi">
+        <div class="db-kpi-label">MRR</div>
+        <div class="db-kpi-value">$82,140</div>
+        <div class="db-kpi-delta up">▲ 8.2%</div>
+      </div>
+      <div class="db-kpi">
+        <div class="db-kpi-label">ARR</div>
+        <div class="db-kpi-value">$985,680</div>
+        <div class="db-kpi-delta up">▲ 11.7%</div>
+      </div>
+      <div class="db-kpi">
+        <div class="db-kpi-label">Churn</div>
+        <div class="db-kpi-value">2.1%</div>
+        <div class="db-kpi-delta down">▼ 0.3%</div>
+      </div>
+    </div>
+
+    <div class="db-grid">
+      <div class="db-card db-col-12">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Revenue by Channel</h3>
+          <span class="db-card-meta">YTD</span>
+        </div>
+        <div class="db-chart-placeholder tall">Stacked Area Chart Placeholder</div>
+      </div>
+      <div class="db-card db-col-6">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Plan Breakdown</h3>
+          <span class="db-card-meta">Current</span>
+        </div>
+        <div class="db-chart-placeholder">Pie Chart Placeholder</div>
+      </div>
+      <div class="db-card db-col-6">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Cohort Retention</h3>
+          <span class="db-card-meta">Last 12 months</span>
+        </div>
+        <div class="db-chart-placeholder">Heatmap Placeholder</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="db-panel" id="db-panel-users">
+    <div class="db-kpis">
+      <div class="db-kpi">
+        <div class="db-kpi-label">DAU</div>
+        <div class="db-kpi-value">5,210</div>
+        <div class="db-kpi-delta up">▲ 6.4%</div>
+      </div>
+      <div class="db-kpi">
+        <div class="db-kpi-label">WAU</div>
+        <div class="db-kpi-value">14,830</div>
+        <div class="db-kpi-delta up">▲ 3.9%</div>
+      </div>
+      <div class="db-kpi">
+        <div class="db-kpi-label">MAU</div>
+        <div class="db-kpi-value">42,016</div>
+        <div class="db-kpi-delta up">▲ 5.1%</div>
+      </div>
+      <div class="db-kpi">
+        <div class="db-kpi-label">Avg. Session</div>
+        <div class="db-kpi-value">4m 12s</div>
+        <div class="db-kpi-delta down">▼ 14s</div>
+      </div>
+    </div>
+
+    <div class="db-grid">
+      <div class="db-card db-col-8">
+        <div class="db-card-header">
+          <h3 class="db-card-title">User Growth</h3>
+          <span class="db-card-meta">Last 90 days</span>
+        </div>
+        <div class="db-chart-placeholder tall">Area Chart Placeholder</div>
+      </div>
+      <div class="db-card db-col-4">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Device Mix</h3>
+          <span class="db-card-meta">This month</span>
+        </div>
+        <div class="db-chart-placeholder tall">Donut Chart Placeholder</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="db-panel" id="db-panel-reports">
+    <div class="db-grid">
+      <div class="db-card db-col-12">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Recent Reports</h3>
+          <span class="db-card-meta">Auto-generated</span>
+        </div>
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>Report</th>
+              <th>Type</th>
+              <th>Generated</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Q4 Revenue Summary</td><td>Financial</td><td>2 hours ago</td><td>Ready</td></tr>
+            <tr><td>User Acquisition Report</td><td>Marketing</td><td>1 day ago</td><td>Ready</td></tr>
+            <tr><td>Churn Analysis</td><td>Retention</td><td>3 days ago</td><td>Ready</td></tr>
+            <tr><td>Product Performance</td><td>Operational</td><td>1 week ago</td><td>Archived</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="db-card db-col-12">
+        <div class="db-card-header">
+          <h3 class="db-card-title">Report Activity</h3>
+          <span class="db-card-meta">Last 30 days</span>
+        </div>
+        <div class="db-chart-placeholder short">Timeline Chart Placeholder</div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="db-tabs">
+    <a class="db-tab" href="#db-panel-overview">Overview</a>
+    <a class="db-tab" href="#db-panel-revenue">Revenue</a>
+    <a class="db-tab" href="#db-panel-users">Users</a>
+    <a class="db-tab" href="#db-panel-reports">Reports</a>
+  </nav>
+</div>
+    ;;
+  }
+}

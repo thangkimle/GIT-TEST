@@ -1,0 +1,544 @@
+Dashboard html_newspaper {
+  title: 'Newspaper'
+  description: ''
+  owner: 'thong.do@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block v_sroh: VizBlock {
+    label: 'Users signup'
+    viz: ColumnChart {
+      dataset: ecommerce
+      calculation count_of_users_id {
+        label: 'Count of Users Id'
+        formula: @aql count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_users.sign_up_date)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_users_id'
+            format {
+              type: 'number'
+              pattern: 'none'
+            }
+          }
+          settings {
+            color_palette: 0
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_7dri: VizBlock {
+    label: 'Gross sales and Created At'
+    viz: DataTable {
+      dataset: ecommerce
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce.gross_sales)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_orders.created_at)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  block v_np_chart: VizBlock {
+    label: 'Users Signup by Quarter'
+    viz: ColumnChart {
+      dataset: ecommerce
+      calculation count_of_users_id {
+        label: 'Count of Users'
+        formula: @aql count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_users.sign_up_date)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_users_id'
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#1a1510'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+
+  view: HTMLLayout {
+    content: @html 
+
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&display=swap');
+
+  .np-root {
+    background: #f7f3eb;
+    color: #1a1510;
+    font-family: 'Source Serif 4', Georgia, serif;
+    width: 100%;
+    max-width: 960px;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  .np-masthead {
+    border-bottom: 3px double #1a1510;
+    padding: 12px 20px 8px;
+    text-align: center;
+  }
+  .np-masthead-name {
+    font-family: 'UnifrakturMaguntia', serif;
+    font-size: 42px;
+    line-height: 1;
+    color: #1a1510;
+    letter-spacing: 1px;
+  }
+  .np-masthead-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #7a6e5f;
+    margin-top: 6px;
+    border-top: 0.5px solid #c9bfa8;
+    padding-top: 6px;
+  }
+  .np-ticker {
+    background: #1a1510;
+    color: #f7f3eb;
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    padding: 4px 20px;
+    display: flex;
+    gap: 32px;
+    overflow: hidden;
+  }
+  .np-ticker span { white-space: nowrap; }
+  .np-ticker .up { color: #4a9e5c; font-weight: 700; }
+  .np-ticker .dn { color: #c94040; font-weight: 700; }
+
+  .np-stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid #c9bfa8;
+    border-bottom: 1px solid #c9bfa8;
+    background: #ede8dc;
+  }
+  .np-stat {
+    padding: 10px 16px;
+    border-right: 0.5px solid #c9bfa8;
+    text-align: center;
+  }
+  .np-stat:last-child { border-right: none; }
+  .np-stat-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #7a6e5f;
+    margin-bottom: 3px;
+  }
+  .np-stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1510;
+  }
+  .np-stat-change { font-size: 10px; margin-top: 2px; }
+  .up { color: #2e7d3c; }
+  .dn { color: #b83232; }
+
+  .np-body {
+    display: grid;
+    grid-template-columns: 1fr 0.5px 2fr 0.5px 1fr;
+    padding: 0 16px;
+    border-bottom: 1px solid #c9bfa8;
+  }
+  .np-col-divider { background: #c9bfa8; margin: 12px 0; }
+  .np-col { padding: 14px 16px; }
+  .np-col-main { padding: 14px 20px; }
+
+  .np-kicker {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #8b2020;
+    margin-bottom: 4px;
+  }
+  .np-headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.15;
+    color: #0f0c08;
+    margin-bottom: 8px;
+  }
+  .np-headline-sm {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #0f0c08;
+    margin-bottom: 6px;
+  }
+  .np-headline-xs {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #1a1510;
+    margin-bottom: 4px;
+  }
+  .np-deck {
+    font-size: 12px;
+    font-style: italic;
+    color: #5a5040;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .np-body-text {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #3a3020;
+    text-align: justify;
+  }
+  .np-byline {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #9a8e7a;
+    margin-bottom: 8px;
+  }
+  .np-rule { border: none; border-top: 0.5px solid #d4c9b4; margin: 12px 0; }
+  .np-rule-heavy { border: none; border-top: 1px solid #c9bfa8; margin: 12px 0; }
+  .np-drop-cap::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px;
+    font-weight: 900;
+    float: left;
+    line-height: 0.85;
+    margin: 4px 5px 0 0;
+    color: #0f0c08;
+  }
+
+  .np-section-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #9a8e7a;
+    border-bottom: 1px solid #c9bfa8;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+  }
+
+  .np-markets-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .np-market-item {
+    padding: 6px 8px;
+    background: #ede8dc;
+    border-left: 2px solid #c9bfa8;
+  }
+  .np-market-item.up-border { border-left-color: #2e7d3c; }
+  .np-market-item.dn-border { border-left-color: #b83232; }
+  .np-market-name {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #7a6e5f;
+  }
+  .np-market-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1510;
+  }
+  .np-market-chg { font-size: 10px; }
+
+  .np-chart-placeholder {
+    background: #ede8dc;
+    border: 1px dashed #b8ad98;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+    border-radius: 2px;
+  }
+  .np-chart-placeholder-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b8ad98;
+  }
+  .np-chart-placeholder-icon { font-size: 28px; color: #c9bfa8; }
+
+  .np-chart-block {
+    background: #ede8dc;
+    border-top: 1px solid #c9bfa8;
+    border-bottom: 1px solid #c9bfa8;
+    min-height: 180px;
+    margin: 12px 0;
+  }
+  .np-chart-block * {
+    font-family: 'Source Serif 4', Georgia, serif !important;
+    color: #1a1510 !important;
+    background: transparent !important;
+  }
+
+  .np-brief { padding: 8px 0; border-top: 0.5px solid #d4c9b4; }
+  .np-brief:first-child { border-top: none; padding-top: 0; }
+
+  .np-footer {
+    border-top: 3px double #c9bfa8;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b8ad98;
+    background: #f0ebe0;
+  }
+</style>
+
+<div class="np-root" >
+
+  <div class="np-masthead" >
+    <div class="np-masthead-name">The Capital Ledger</div>
+    <div class="np-masthead-meta">
+      <span>Est. 2024</span>
+      <span>Finance &amp; Capital Markets</span>
+      <span>Wednesday, May 21, 2025</span>
+    </div>
+  </div>
+
+  <div class="np-ticker">
+    <span>S&amp;P 500 <span class="up">▲ 5,304.72 +0.34%</span></span>
+    <span>DOW <span class="up">▲ 39,112.16 +0.21%</span></span>
+    <span>NASDAQ <span class="dn">▼ 16,737.08 −0.18%</span></span>
+    <span>10Y UST <span class="up">4.52%</span></span>
+    <span>GOLD <span class="up">▲ $2,341.50</span></span>
+    <span>WTI <span class="dn">▼ $77.84 −0.9%</span></span>
+    <span>EUR/USD <span>1.0812</span></span>
+    <span>BTC <span class="up">▲ $68,420</span></span>
+  </div>
+
+  <div class="np-stat-row">
+    <div class="np-stat">
+      <div class="np-stat-label">S&amp;P 500</div>
+      <div class="np-stat-value">5,304</div>
+      <div class="np-stat-change up">▲ +0.34%</div>
+    </div>
+    <div class="np-stat">
+      <div class="np-stat-label">VIX</div>
+      <div class="np-stat-value">13.42</div>
+      <div class="np-stat-change dn">▼ −0.8%</div>
+    </div>
+    <div class="np-stat">
+      <div class="np-stat-label">10Y Yield</div>
+      <div class="np-stat-value">4.52%</div>
+      <div class="np-stat-change up">▲ +4 bps</div>
+    </div>
+    <div class="np-stat">
+      <div class="np-stat-label">DXY</div>
+      <div class="np-stat-value">104.71</div>
+      <div class="np-stat-change dn">▼ −0.12%</div>
+    </div>
+  </div>
+
+  <div class="np-body">
+
+    <div class="np-col">
+      <div class="np-section-label">Markets</div>
+      <div class="np-markets-row">
+        <div class="np-market-item up-border">
+          <div class="np-market-name">AAPL</div>
+          <div class="np-market-val">189.40</div>
+          <div class="np-market-chg up">▲ +1.2%</div>
+        </div>
+        <div class="np-market-item dn-border">
+          <div class="np-market-name">TSLA</div>
+          <div class="np-market-val">174.82</div>
+          <div class="np-market-chg dn">▼ −2.4%</div>
+        </div>
+        <div class="np-market-item up-border">
+          <div class="np-market-name">NVDA</div>
+          <div class="np-market-val">882.15</div>
+          <div class="np-market-chg up">▲ +3.1%</div>
+        </div>
+        <div class="np-market-item up-border">
+          <div class="np-market-name">MSFT</div>
+          <div class="np-market-val">418.70</div>
+          <div class="np-market-chg up">▲ +0.7%</div>
+        </div>
+        <div class="np-market-item dn-border">
+          <div class="np-market-name">AMZN</div>
+          <div class="np-market-val">185.44</div>
+          <div class="np-market-chg dn">▼ −0.3%</div>
+        </div>
+        <div class="np-market-item up-border">
+          <div class="np-market-name">META</div>
+          <div class="np-market-val">501.03</div>
+          <div class="np-market-chg up">▲ +1.5%</div>
+        </div>
+      </div>
+
+      <hr class="np-rule-heavy">
+      <div class="np-section-label">Commodities</div>
+      <div class="np-brief">
+        <div class="np-headline-xs">Gold holds above $2,340</div>
+        <div class="np-body-text">Spot gold maintained gains as safe-haven demand persisted amid geopolitical uncertainty in the Middle East.</div>
+      </div>
+      <div class="np-brief">
+        <div class="np-headline-xs">Oil slips on demand outlook</div>
+        <div class="np-body-text">WTI crude slid 0.9% as IEA revised global demand forecasts downward for Q3, citing slowing Chinese industrial output.</div>
+      </div>
+      <div class="np-brief">
+        <div class="np-headline-xs">Copper nears 2-year high</div>
+        <div class="np-body-text">LME copper topped $9,800/t on supply tightness and renewed AI infrastructure buildout demand.</div>
+      </div>
+    </div>
+
+    <div class="np-col-divider"></div>
+
+    <div class="np-col-main">
+      <div class="np-kicker">Lead Story · Federal Reserve</div>
+      <div class="np-headline">Fed Holds Rates, Signals Single Cut in 2024 as Inflation Proves Stubborn</div>
+      <div class="np-deck">Minutes from May meeting reveal a divided committee; two members dissented in favour of an immediate reduction</div>
+      <div class="np-byline">By Staff Correspondent</div>
+      <div class="np-body-text np-drop-cap">
+        The Federal Open Market Committee voted 10–2 to hold the federal funds rate at 5.25–5.50 percent on Wednesday, marking the seventh consecutive meeting at which policymakers chose to leave borrowing costs unchanged. The decision, widely anticipated by futures markets, was accompanied by updated projections that reduced the committee's median expectation for rate cuts this year from three reductions to just one.
+      </div>
+      <div class="np-body-text" style="margin-top:8px;">
+        Chair Jerome Powell acknowledged that progress on inflation had "stalled somewhat" in the opening months of the year, with core PCE running above 3 percent for the fourth consecutive quarter. The committee would need "greater confidence" before reducing rates, he said.
+      </div>
+
+      <div class="np-chart-block">
+        <h-block name="v_np_chart" />
+      </div>
+
+      <hr class="np-rule">
+      <div class="np-kicker">Secondary Story · Treasury Markets</div>
+      <div class="np-headline-sm">Yields Climb as Auction Draws Weak Demand; 10-Year Approaches 4.60%</div>
+      <div class="np-body-text">Tuesday's $44 billion 10-year note auction saw the lowest bid-to-cover ratio in over a year, raising questions about appetite for long-duration paper as the fiscal deficit continues to widen. The 10-year yield rose 4 basis points to 4.52 percent.</div>
+    </div>
+
+    <div class="np-col-divider"></div>
+
+    <div class="np-col">
+      <div class="np-section-label">Analysis</div>
+      <div class="np-brief">
+        <div class="np-kicker" style="margin-bottom:2px">Opinion</div>
+        <div class="np-headline-xs">The soft landing is real — but fragile</div>
+        <div class="np-body-text">Labour markets remain resilient while inflation cools, but a single exogenous shock could snap the thread that keeps this cycle alive.</div>
+      </div>
+      <hr class="np-rule">
+      <div class="np-brief">
+        <div class="np-kicker" style="margin-bottom:2px">Earnings</div>
+        <div class="np-headline-xs">Big Tech beats expectations for third straight quarter</div>
+        <div class="np-body-text">Aggregate earnings for the Magnificent Seven rose 42% year-on-year, driven by AI cloud revenue and cost-cutting across headcount.</div>
+      </div>
+      <hr class="np-rule">
+      <div class="np-brief">
+        <div class="np-kicker" style="margin-bottom:2px">Private Equity</div>
+        <div class="np-headline-xs">Buyout deal volume rises 18% as credit markets ease</div>
+        <div class="np-body-text">Falling leveraged loan spreads and improving LP sentiment revived dealmaking, with Q1 global buyout volume reaching $98bn.</div>
+      </div>
+      <hr class="np-rule">
+      <div class="np-brief">
+        <div class="np-kicker" style="margin-bottom:2px">Crypto</div>
+        <div class="np-headline-xs">Spot ETH ETF approval seen by July, analysts say</div>
+        <div class="np-body-text">SEC's revised engagement with issuers raised approval odds to 70%, according to a Bloomberg Intelligence note published Wednesday.</div>
+      </div>
+      <hr class="np-rule">
+      <div class="np-brief">
+        <div class="np-kicker" style="margin-bottom:2px">Currency</div>
+        <div class="np-headline-xs">Yen slides past 157, BoJ intervention risks rise</div>
+        <div class="np-body-text">The yen tested fresh 34-year lows against the dollar as the Bank of Japan maintained its ultra-loose stance despite political pressure.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="np-footer">
+    <span>The Capital Ledger · All data delayed 15 minutes</span>
+    <span>For informational purposes only. Not financial advice.</span>
+    <span>© 2025 Capital Ledger Media</span>
+  </div>
+
+</div>
+
+
+    
+    ;;
+  }
+  theme: H.themes.vanilla
+}

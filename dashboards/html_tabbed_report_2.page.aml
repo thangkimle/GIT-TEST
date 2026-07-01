@@ -1,0 +1,1469 @@
+Dashboard html_tabbed_report_pro {
+  title: 'Tabbed Report pro'
+  description: ''
+  owner: 'thong.do@holistics.io'
+
+  theme: my_theme
+  block v_tab_trend: VizBlock {
+    label: 'User signups by quarter'
+    viz: ColumnChart {
+      dataset: ecommerce
+      calculation count_of_users_id {
+        label: 'Users'
+        formula: @aql count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_users.sign_up_date)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_users_id'
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#60a5fa'
+          }
+        }
+        settings {
+          hidden: true
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_tab_donut: VizBlock {
+    label: 'Orders by status'
+    viz: PieChart {
+      dataset: ecommerce
+      calculation order_count {
+        label: ' '
+        formula: @aql ecommerce_orders | count(ecommerce_orders.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_orders.status)
+        format {
+          type: 'text'
+        }
+      }
+      series {
+        field: VizFieldFull {
+          label: ' '
+          ref: 'order_count'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+        }
+        settings {
+          point {
+            value: 'delivered'
+            color: '#60a5fa'
+          }
+          point {
+            value: 'cancelled'
+            color: '#fb7185'
+          }
+          point {
+            value: 'refunded'
+            color: '#c084fc'
+          }
+          point {
+            value: 'processing'
+            color: '#fbbf24'
+          }
+          point {
+            value: 'shipped'
+            color: '#34d399'
+          }
+        }
+      }
+      settings {
+        display_as_donut: true
+        row_limit: 100
+        sort: 'desc'
+        legend_label: 'hidden'
+        show_data_label: true
+        data_label_position: 'none'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_tab_bar: VizBlock {
+    label: 'Orders by status stacked'
+    viz: BarChart {
+      dataset: ecommerce
+      calculation order_count {
+        label: 'Orders'
+        formula: @aql ecommerce_orders | count(ecommerce_orders.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_orders.status)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'order_count'
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            point {
+              value: 'delivered'
+              color: '#fbbf24'
+            }
+            point {
+              value: 'cancelled'
+              color: '#fb7185'
+            }
+            point {
+              value: 'refunded'
+              color: '#94a3b8'
+            }
+          }
+        }
+        settings {
+          hidden: true
+          stack_series_by: 'value'
+        }
+      }
+      settings {
+        row_limit: 500
+        legend_label: 'hidden'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_tab_area: VizBlock {
+    label: 'Returned vs Net Sales'
+    viz: AreaChart {
+      dataset: ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce.returned_amount)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#fb7185'
+          }
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce.net_sales)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#34d399'
+          }
+        }
+        settings {
+          hidden: true
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_tab_margin: VizBlock {
+    label: 'Net Sales Margin trend'
+    viz: AreaChart {
+      dataset: ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce.net_sales_margin)
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#c084fc'
+            line_interpolation: 'smooth'
+          }
+        }
+        settings {
+          hidden: true
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        show_data_points: false
+        connect_discontinuous_points: true
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_tab_acquisition: VizBlock {
+    label: 'User acquisition by month'
+    viz: ColumnChart {
+      dataset: ecommerce
+      calculation count_of_users_id {
+        label: 'Users'
+        formula: @aql count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_users.sign_up_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'yyyy MMM'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_users_id'
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#34d399'
+          }
+        }
+        settings {
+          hidden: true
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_kpi_rev: VizBlock {
+    label: 'Gross Sales'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce.gross_sales)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_kpi_users: VizBlock {
+    label: 'Total Users'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce_users.id)
+        aggregation: 'count'
+        format {
+          type: 'number'
+          pattern: '#,###'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_kpi_margin: VizBlock {
+    label: 'Net Sales Margin'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce.net_sales_margin)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_kpi_return: VizBlock {
+    label: 'Return Ratio'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce.return_ratio)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block filter_date: FilterBlock {
+    label: 'Order Date'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: ecommerce
+      field: r(ecommerce_orders.created_at)
+    }
+    default {
+      operator: 'matches'
+      value: '1/1/2020 - 12/31/2026'
+    }
+  }
+
+  view: HTMLLayout {
+    content: @html
+<!-- ============================================================
+  DASH·HQ — Modern dark dashboard
+  Pure HTML/CSS, no JS, no @scope, no radios
+  Isolation: every selector prefixed with .dash-hq
+  Tabs: :target via anchor links (sanitizer-safe)
+============================================================ -->
+
+<div class="dash-hq">
+  <style>
+    /* ---------- Reset (scoped via prefix) ---------- */
+    .dash-hq,
+    .dash-hq *,
+    .dash-hq *::before,
+    .dash-hq *::after { box-sizing: border-box; }
+
+    /* ---------- Root container & tokens ---------- */
+    .dash-hq {
+      /* Surfaces */
+      --dh-bg:        #0b0d12;
+      --dh-surface:   #14171f;
+      --dh-surface-2: #1a1e28;
+      --dh-border:    #262b38;
+      --dh-border-strong: #353b4d;
+
+      /* Text */
+      --dh-text:       #e6e8ee;
+      --dh-text-dim:   #8b91a3;
+      --dh-text-faint: #5a6075;
+
+      /* Accents */
+      --dh-blue:   #60a5fa;
+      --dh-red:    #fb7185;
+      --dh-green:  #34d399;
+      --dh-purple: #c084fc;
+      --dh-amber:  #fbbf24;
+
+      --dh-radius: 6px;
+      --dh-gap: 16px;
+
+      /* Typography */
+      --dh-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --dh-font-mono: ui-monospace, "JetBrains Mono", "Fira Code", "SF Mono", Menlo, Consolas, monospace;
+      --dh-font-display: "Impact", "Haettenschweiler", "Arial Narrow Bold", "Bebas Neue", sans-serif;
+
+      display: flex;
+      flex-direction: column;
+      font-family: var(--dh-font-sans);
+      color: var(--dh-text);
+      background: var(--dh-bg);
+      padding: 28px 32px;
+      border-radius: var(--dh-radius);
+      min-height: 600px;
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    /* Subtle radial glow in background */
+    .dash-hq::before {
+      content: "";
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(77, 140, 255, 0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Push real content above the glow */
+    .dash-hq > * { position: relative; z-index: 1; }
+
+    /* Visual order — panels precede tabs in DOM for the sibling selector trick */
+    .dash-hq .dh-topbar  { order: 1; }
+    .dash-hq .dh-filters { order: 2; }
+    .dash-hq .dh-tabs    { order: 3; }
+    .dash-hq .dh-header  { order: 4; }
+    .dash-hq .dh-panel   { order: 5; }
+
+    /* ---------- Top bar ---------- */
+    .dash-hq .dh-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 18px;
+      margin-bottom: 4px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .dash-hq .dh-brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .dash-hq .dh-logo {
+      font-family: var(--dh-font-display);
+      font-size: 22px;
+      letter-spacing: 0.05em;
+      color: var(--dh-text);
+      font-weight: 900;
+    }
+    .dash-hq .dh-logo span {
+      color: var(--dh-red);
+    }
+    .dash-hq .dh-workspace {
+      color: var(--dh-text-dim);
+      font-size: 13px;
+      font-family: var(--dh-font-mono);
+      padding-left: 18px;
+      border-left: 1px solid var(--dh-border);
+    }
+    .dash-hq .dh-workspace b {
+      color: var(--dh-text);
+      font-weight: 500;
+      margin-left: 6px;
+    }
+    .dash-hq .dh-status {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--dh-font-mono);
+      font-size: 12px;
+      color: var(--dh-text-dim);
+    }
+    .dash-hq .dh-status b {
+      color: var(--dh-text);
+      font-weight: 500;
+    }
+    .dash-hq .dh-live {
+      background: var(--dh-red);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      position: relative;
+    }
+    .dash-hq .dh-live::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 3px;
+      background: var(--dh-red);
+      animation: dh-pulse 2s ease-out infinite;
+      z-index: -1;
+    }
+    @keyframes dh-pulse {
+      0%   { transform: scale(1);   opacity: 0.7; }
+      100% { transform: scale(1.4); opacity: 0;   }
+    }
+
+    /* ---------- Tabs ---------- */
+    .dash-hq .dh-tabs {
+      display: flex;
+      gap: 28px;
+      border-bottom: 1px solid var(--dh-border);
+      margin-bottom: 28px;
+      padding-bottom: 0;
+    }
+    .dash-hq .dh-tab {
+      position: relative;
+      padding: 14px 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dh-text-dim);
+      text-decoration: none;
+      margin-bottom: -1px;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dash-hq .dh-tab::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .dash-hq .dh-tab.dh-tab-live::before {
+      background: var(--dh-green);
+      box-shadow: 0 0 8px var(--dh-green);
+    }
+    .dash-hq .dh-tab:hover {
+      color: var(--dh-text);
+    }
+
+    /* ---------- Panel visibility ---------- */
+    .dash-hq .dh-panel {
+      display: none;
+      scroll-margin-top: 9999px;
+      animation: dh-fade-up 0.4s ease both;
+    }
+    .dash-hq .dh-panel:target { display: block; }
+
+    /* Active tab — when its target panel is shown */
+    .dash-hq #dh-panel-summary:target   ~ .dh-tabs a[href="#dh-panel-summary"],
+    .dash-hq #dh-panel-performance:target ~ .dh-tabs a[href="#dh-panel-performance"],
+    .dash-hq #dh-panel-breakdown:target ~ .dh-tabs a[href="#dh-panel-breakdown"],
+    .dash-hq #dh-panel-activity:target  ~ .dh-tabs a[href="#dh-panel-activity"] {
+      color: var(--dh-text);
+      border-bottom-color: var(--dh-red);
+    }
+
+    /* Default state — no hash means show Summary */
+    .dash-hq:not(:has(.dh-panel:target)) #dh-panel-summary { display: block; }
+    .dash-hq:not(:has(.dh-panel:target)) .dh-tabs a[href="#dh-panel-summary"] {
+      color: var(--dh-text);
+      border-bottom-color: var(--dh-red);
+    }
+
+    @keyframes dh-fade-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------- Header (per-panel page title) ---------- */
+    .dash-hq .dh-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .dash-hq .dh-title {
+      font-family: var(--dh-font-display);
+      font-size: 42px;
+      letter-spacing: 0.04em;
+      margin: 0;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .dash-hq .dh-subtitle {
+      font-family: var(--dh-font-mono);
+      font-size: 11px;
+      color: var(--dh-text-dim);
+      margin: 8px 0 0 0;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .dash-hq .dh-date-pill {
+      background: var(--dh-surface);
+      border: 1px solid var(--dh-border);
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-family: var(--dh-font-mono);
+      font-size: 13px;
+      color: var(--dh-text-dim);
+    }
+    .dash-hq .dh-date-pill b {
+      color: var(--dh-text);
+      font-weight: 500;
+    }
+
+    /* ---------- KPI cards ---------- */
+    .dash-hq .dh-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--dh-gap);
+      margin-bottom: var(--dh-gap);
+    }
+    .dash-hq .dh-kpi {
+      background: var(--dh-surface);
+      border: 1px solid var(--dh-border);
+      border-radius: var(--dh-radius);
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      animation: dh-fade-up 0.5s ease both;
+    }
+    .dash-hq .dh-kpi:hover {
+      transform: translateY(-2px);
+      border-color: var(--dh-border-strong);
+    }
+    /* Stagger the entrance */
+    .dash-hq .dh-kpi:nth-child(1) { animation-delay: 0.05s; }
+    .dash-hq .dh-kpi:nth-child(2) { animation-delay: 0.10s; }
+    .dash-hq .dh-kpi:nth-child(3) { animation-delay: 0.15s; }
+    .dash-hq .dh-kpi:nth-child(4) { animation-delay: 0.20s; }
+
+    /* Neon accent bar at top */
+    .dash-hq .dh-kpi::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, currentColor, transparent);
+      color: var(--dh-blue);
+      opacity: 0.9;
+    }
+    .dash-hq .dh-kpi.accent-blue::before   { color: var(--dh-blue);   }
+    .dash-hq .dh-kpi.accent-red::before    { color: var(--dh-red);    }
+    .dash-hq .dh-kpi.accent-green::before  { color: var(--dh-green);  }
+    .dash-hq .dh-kpi.accent-purple::before { color: var(--dh-purple); }
+    .dash-hq .dh-kpi.accent-amber::before  { color: var(--dh-amber);  }
+
+    .dash-hq .dh-kpi-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .dash-hq .dh-kpi-main { min-width: 0; flex: 1; }
+    .dash-hq .dh-kpi-label {
+      font-family: var(--dh-font-mono);
+      font-size: 11px;
+      color: var(--dh-text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 12px;
+    }
+    .dash-hq .dh-kpi-value {
+      font-family: var(--dh-font-display);
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      color: var(--dh-text);
+    }
+    .dash-hq .dh-kpi-delta {
+      font-family: var(--dh-font-mono);
+      font-size: 12px;
+      margin-top: 14px;
+    }
+    .dash-hq .dh-kpi-delta.up   { color: var(--dh-green); }
+    .dash-hq .dh-kpi-delta.down { color: var(--dh-red);   }
+    .dash-hq .dh-kpi-delta span { color: var(--dh-text-faint); }
+
+    .dash-hq .dh-spark {
+      width: 70px;
+      height: 32px;
+      border: 1px solid var(--dh-border);
+      border-radius: 3px;
+      font-family: var(--dh-font-mono);
+      font-size: 9px;
+      color: var(--dh-text-faint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ---------- Chart grid ---------- */
+    .dash-hq .dh-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--dh-gap);
+    }
+    .dash-hq .dh-card {
+      background: var(--dh-surface);
+      border: 1px solid var(--dh-border);
+      border-radius: var(--dh-radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      animation: dh-fade-up 0.5s ease both;
+      transition: border-color 0.2s ease;
+    }
+    .dash-hq .dh-card:hover { border-color: var(--dh-border-strong); }
+    .dash-hq .dh-card:nth-child(1) { animation-delay: 0.25s; }
+    .dash-hq .dh-card:nth-child(2) { animation-delay: 0.30s; }
+    .dash-hq .dh-card:nth-child(3) { animation-delay: 0.35s; }
+    .dash-hq .dh-card:nth-child(4) { animation-delay: 0.40s; }
+    .dash-hq .dh-card:nth-child(5) { animation-delay: 0.45s; }
+
+    .dash-hq .dh-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    .dash-hq .dh-card-eyebrow {
+      font-family: var(--dh-font-mono);
+      font-size: 10px;
+      color: var(--dh-text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 6px;
+    }
+    .dash-hq .dh-card-title {
+      font-family: var(--dh-font-display);
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      margin: 0;
+      color: var(--dh-text);
+    }
+    .dash-hq .dh-card-action {
+      color: var(--dh-blue);
+      font-size: 12px;
+      font-family: var(--dh-font-mono);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .dash-hq .dh-card-action:hover { opacity: 0.7; }
+
+    .dash-hq .dh-legend {
+      display: flex;
+      gap: 16px;
+      font-family: var(--dh-font-mono);
+      font-size: 11px;
+      color: var(--dh-text-dim);
+      margin-bottom: 12px;
+    }
+    .dash-hq .dh-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dash-hq .dh-legend-item::before {
+      content: "";
+      width: 12px;
+      height: 2px;
+      background: currentColor;
+    }
+    .dash-hq .dh-legend-item.dot-blue   { color: var(--dh-blue);   }
+    .dash-hq .dh-legend-item.dot-red    { color: var(--dh-red);    }
+    .dash-hq .dh-legend-item.dot-grey   { color: var(--dh-text-faint); }
+    .dash-hq .dh-legend-item span       { color: var(--dh-text-dim); }
+
+    .dash-hq .dh-col-12 { grid-column: span 12; }
+    .dash-hq .dh-col-8  { grid-column: span 8; }
+    .dash-hq .dh-col-7  { grid-column: span 7; }
+    .dash-hq .dh-col-6  { grid-column: span 6; }
+    .dash-hq .dh-col-5  { grid-column: span 5; }
+    .dash-hq .dh-col-4  { grid-column: span 4; }
+
+    @media (max-width: 900px) {
+      .dash-hq .dh-col-8, .dash-hq .dh-col-7, .dash-hq .dh-col-6,
+      .dash-hq .dh-col-5, .dash-hq .dh-col-4 { grid-column: span 12; }
+    }
+
+    /* ---------- Chart placeholders ---------- */
+    .dash-hq .dh-chart {
+      flex: 1;
+      min-height: 240px;
+      border: 1px dashed var(--dh-border-strong);
+      border-radius: 4px;
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.01);
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
+    .dash-hq .dh-chart.tall  { min-height: 320px; }
+    .dash-hq .dh-chart.short { min-height: 160px; }
+
+    .dash-hq .dh-chart-icon {
+      font-size: 22px;
+      opacity: 0.4;
+    }
+    .dash-hq .dh-chart-label {
+      font-family: var(--dh-font-mono);
+      font-size: 11px;
+      color: var(--dh-text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+    .dash-hq .dh-chart-id {
+      font-family: var(--dh-font-mono);
+      font-size: 10px;
+      color: var(--dh-text-faint);
+      opacity: 0.6;
+    }
+
+    /* Scanline shimmer over placeholders */
+    .dash-hq .dh-chart::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(77, 140, 255, 0.04) 50%,
+        transparent 100%
+      );
+      animation: dh-scan 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes dh-scan {
+      0%, 100% { transform: translateX(-100%); }
+      50%      { transform: translateX(100%); }
+    }
+
+    /* ---------- Segment bars ---------- */
+    .dash-hq .dh-segments {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .dash-hq .dh-segment {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      font-family: var(--dh-font-mono);
+      font-size: 13px;
+    }
+    .dash-hq .dh-segment-name { color: var(--dh-text); }
+    .dash-hq .dh-segment-pct  { color: var(--dh-text); }
+    .dash-hq .dh-segment-bar {
+      grid-column: 1 / -1;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--dh-border);
+      overflow: hidden;
+      position: relative;
+    }
+    .dash-hq .dh-segment-bar::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: var(--w, 0%);
+      background: currentColor;
+      border-radius: 2px;
+      animation: dh-grow 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.5s;
+    }
+    .dash-hq .dh-segment.color-blue   { color: var(--dh-blue);   }
+    .dash-hq .dh-segment.color-green  { color: var(--dh-green);  }
+    .dash-hq .dh-segment.color-purple { color: var(--dh-purple); }
+    .dash-hq .dh-segment.color-red    { color: var(--dh-red);    }
+    .dash-hq .dh-segment.color-amber  { color: var(--dh-amber);  }
+
+    @keyframes dh-grow {
+      from { width: 0; }
+      to   { width: var(--w, 0%); }
+    }
+
+    /* ---------- Table ---------- */
+    .dash-hq .dh-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      font-family: var(--dh-font-mono);
+    }
+    .dash-hq .dh-table th,
+    .dash-hq .dh-table td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--dh-border);
+    }
+    .dash-hq .dh-table th {
+      font-weight: 500;
+      color: var(--dh-text-faint);
+      background: var(--dh-surface-2);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .dash-hq .dh-table tr:last-child td { border-bottom: none; }
+    .dash-hq .dh-table tbody tr {
+      transition: background 0.15s ease;
+    }
+    .dash-hq .dh-table tbody tr:hover { background: var(--dh-surface-2); }
+    .dash-hq .dh-table td { color: var(--dh-text); }
+    .dash-hq .dh-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .dash-hq .dh-tag.ready    { background: rgba(46, 204, 113, 0.15); color: var(--dh-green); }
+    .dash-hq .dh-tag.archived { background: rgba(139, 145, 163, 0.15); color: var(--dh-text-dim); }
+
+    /* ---------- Live chart overrides ---------- */
+    .dash-hq .dh-chart.dh-chart-live {
+      border: none;
+      background: transparent;
+      background-image: none;
+      align-items: stretch;
+      justify-content: stretch;
+      padding: 0;
+    }
+    .dash-hq .dh-chart.dh-chart-live::after { display: none; }
+    .dash-hq .dh-chart.dh-chart-live * {
+      background: transparent !important;
+      color: var(--dh-text) !important;
+    }
+
+    /* ---------- Filter bar ---------- */
+    .dash-hq .dac-ic-block-label { display: none; }
+    .dash-hq .dh-filters {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding-bottom: 18px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    /* Filter dark mode overrides — broad scope in case h-block renders outside .dh-filters */
+    .dash-hq .dac-ic-block { color: var(--dh-text) !important; }
+    .dash-hq .dm-filter-container,
+    .dash-hq .h-theme-dm-filter-container {
+      background: var(--dh-surface) !important;
+      color: var(--dh-text) !important;
+    }
+    .dash-hq .dm-filter-form {
+      background: var(--dh-surface) !important;
+      border: 1px solid var(--dh-border) !important;
+      border-radius: var(--dh-radius) !important;
+      box-shadow: none !important;
+      color: var(--dh-text) !important;
+    }
+    .dash-hq .hui-select-trigger.hui-select.operator-select,
+    .dash-hq .hui-select-trigger.operator-select,
+    .dash-hq .operator-select {
+      background: var(--dh-surface-2) !important;
+      background-color: var(--dh-surface-2) !important;
+      color: var(--dh-text-dim) !important;
+      border-right: 1px solid var(--dh-border) !important;
+    }
+    .dash-hq .hui-select-trigger.hui-select.operator-select:hover,
+    .dash-hq .operator-select:hover {
+      background: var(--dh-border) !important;
+      background-color: var(--dh-border) !important;
+      color: var(--dh-text) !important;
+    }
+    .dash-hq .h-highlightable-input,
+    .dash-hq .h-input {
+      background: var(--dh-surface-2) !important;
+      color: var(--dh-text) !important;
+    }
+    .dash-hq .viz-filter-value-input,
+    .dash-hq .h-theme-viz-filter-value-input {
+      background: var(--dh-surface-2) !important;
+    }
+    .dash-hq .dac-ic-block .h-icon { color: var(--dh-text-faint) !important; }
+    .dash-hq .dac-ic-block * {
+      font-family: var(--dh-font-mono) !important;
+      font-size: 12px !important;
+    }
+    .dash-hq .h-highlightable-input mark {
+      background-color: rgba(96, 165, 250, 0.2) !important;
+      color: var(--dh-text) !important;
+      border-radius: 0.25rem;
+      padding: 0 0.25rem;
+    }
+
+    /* ---------- KPI value inherits display font ---------- */
+    .dash-hq .dh-kpi-value .h-kpi-metric-kpi,
+    .dash-hq .dh-kpi-value .h-kpi-metric-kpi * {
+      font-family: var(--dh-font-display) !important;
+      font-size: 36px !important;
+      font-weight: 900 !important;
+      line-height: 1 !important;
+      letter-spacing: 0.01em !important;
+      color: var(--dh-text) !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  </style>
+
+  <!-- =================== TOP BAR =================== -->
+  <div class="dh-topbar">
+    <div class="dh-brand">
+      <div class="dh-logo">DASH<span>·</span>HQ</div>
+      <div class="dh-workspace">Workspace:<b>Acme Corp</b></div>
+    </div>
+    <div class="dh-status">
+      <span>Last sync: <b>2 min ago</b></span>
+      <span class="dh-live">LIVE</span>
+    </div>
+  </div>
+
+  <!-- =================== FILTERS =================== -->
+
+  <!-- =================== PANELS (DOM first, visually below) =================== -->
+
+  <!-- ----- SUMMARY ----- -->
+  <section class="dh-panel" id="dh-panel-summary">
+    <div class="dh-header">
+      <div>
+        <h1 class="dh-title">OVERVIEW</h1>
+        <p class="dh-subtitle">FY 2025 · ALL SEGMENTS</p>
+      </div>
+      <div class="dh-date-pill" style="display: flex">
+       <span style="font-size: 16px; padding-top: 6px; padding-right: 12px">📅</span>
+      <h-block name="filter_date" />
+      </div>
+    
+    </div>
+
+    <div class="dh-kpis">
+      <div class="dh-kpi accent-blue">
+        <div class="dh-kpi-label">Gross Sales</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value"><h-block name="v_kpi_rev" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="dh-kpi accent-red">
+        <div class="dh-kpi-label">Total Users</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value"><h-block name="v_kpi_users" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="dh-kpi accent-green">
+        <div class="dh-kpi-label">Net Sales Margin</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value"><h-block name="v_kpi_margin" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="dh-kpi accent-purple">
+        <div class="dh-kpi-label">Return Ratio</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value"><h-block name="v_kpi_return" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dh-grid">
+      <div class="dh-card dh-col-7">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Revenue Performance</div>
+            <h3 class="dh-card-title">MONTHLY TREND</h3>
+          </div>
+          <a class="dh-card-action" href="#">Export ↗</a>
+        </div>
+        <div class="dh-legend">
+          <span class="dh-legend-item dot-blue"><span>Revenue</span></span>
+          <span class="dh-legend-item dot-red"><span>Target</span></span>
+          <span class="dh-legend-item dot-grey"><span>Prior Year</span></span>
+        </div>
+        <div class="dh-chart tall dh-chart-live"><h-block name="v_tab_trend" /></div>
+      </div>
+      <div class="dh-card dh-col-5">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Mix</div>
+            <h3 class="dh-card-title">REVENUE BY SEGMENT</h3>
+          </div>
+          <a class="dh-card-action" href="#">Details →</a>
+        </div>
+        <div class="dh-chart dh-chart-live"><h-block name="v_tab_donut" /></div>
+        <div class="dh-segments">
+          <div class="dh-segment color-blue">
+            <span class="dh-segment-name">Enterprise</span>
+            <span class="dh-segment-pct">43.8%</span>
+            <div class="dh-segment-bar" style="--w: 43.8%;"></div>
+          </div>
+          <div class="dh-segment color-green">
+            <span class="dh-segment-name">Mid-Market</span>
+            <span class="dh-segment-pct">31.2%</span>
+            <div class="dh-segment-bar" style="--w: 31.2%;"></div>
+          </div>
+          <div class="dh-segment color-purple">
+            <span class="dh-segment-name">SMB</span>
+            <span class="dh-segment-pct">25.0%</span>
+            <div class="dh-segment-bar" style="--w: 25.0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dh-card dh-col-4">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Funnel</div>
+            <h3 class="dh-card-title">PIPELINE</h3>
+          </div>
+        </div>
+        <div class="dh-chart short dh-chart-live"><h-block name="v_tab_bar" /></div>
+      </div>
+      <div class="dh-card dh-col-4">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Churn</div>
+            <h3 class="dh-card-title">RETENTION CURVE</h3>
+          </div>
+        </div>
+        <div class="dh-chart short dh-chart-live"><h-block name="v_tab_area" /></div>
+      </div>
+      <div class="dh-card dh-col-4">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Sentiment</div>
+            <h3 class="dh-card-title">NPS TREND</h3>
+          </div>
+        </div>
+        <div class="dh-chart short dh-chart-live"><h-block name="v_tab_margin" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ----- PERFORMANCE ----- -->
+  <section class="dh-panel" id="dh-panel-performance">
+    <div class="dh-header">
+      <div>
+        <h1 class="dh-title">PERFORMANCE</h1>
+        <p class="dh-subtitle">REVENUE · LIVE METRICS</p>
+      </div>
+      <div class="dh-date-pill">📅 <b>Q1 — Q2 2026</b></div>
+    </div>
+
+    <div class="dh-kpis">
+      <div class="dh-kpi accent-blue">
+        <div class="dh-kpi-label">MRR</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value">$82.1K</div>
+            <div class="dh-kpi-delta up">▲ +8.2% <span>MoM</span></div>
+          </div>
+          <div class="dh-spark">sparkline</div>
+        </div>
+      </div>
+      <div class="dh-kpi accent-green">
+        <div class="dh-kpi-label">ARR</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value">$985K</div>
+            <div class="dh-kpi-delta up">▲ +11.7% <span>YoY</span></div>
+          </div>
+          <div class="dh-spark">sparkline</div>
+        </div>
+      </div>
+      <div class="dh-kpi accent-amber">
+        <div class="dh-kpi-label">Churn Rate</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value">2.1%</div>
+            <div class="dh-kpi-delta down">▼ −0.3pp <span>vs prior</span></div>
+          </div>
+          <div class="dh-spark">sparkline</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dh-grid">
+      <div class="dh-card dh-col-12">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Stacked View</div>
+            <h3 class="dh-card-title">REVENUE BY CHANNEL</h3>
+          </div>
+          <a class="dh-card-action" href="#">Export ↗</a>
+        </div>
+        <div class="dh-chart tall dh-chart-live"><h-block name="v_tab_trend" /></div>
+      </div>
+      <div class="dh-card dh-col-6">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Distribution</div>
+            <h3 class="dh-card-title">PLAN BREAKDOWN</h3>
+          </div>
+        </div>
+        <div class="dh-chart dh-chart-live"><h-block name="v_tab_donut" /></div>
+      </div>
+      <div class="dh-card dh-col-6">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Cohort</div>
+            <h3 class="dh-card-title">RETENTION HEATMAP</h3>
+          </div>
+        </div>
+        <div class="dh-chart dh-chart-live"><h-block name="v_tab_area" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ----- BREAKDOWN ----- -->
+  <section class="dh-panel" id="dh-panel-breakdown">
+    <div class="dh-header">
+      <div>
+        <h1 class="dh-title">BREAKDOWN</h1>
+        <p class="dh-subtitle">USER COHORTS · ACTIVITY</p>
+      </div>
+      <div class="dh-date-pill">📅 <b>Last 30 days</b></div>
+    </div>
+
+    <div class="dh-kpis">
+      <div class="dh-kpi accent-blue">
+        <div class="dh-kpi-label">DAU</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value">5,210</div>
+            <div class="dh-kpi-delta up">▲ +6.4% <span>vs last week</span></div>
+          </div>
+          <div class="dh-spark">sparkline</div>
+        </div>
+      </div>
+      <div class="dh-kpi accent-purple">
+        <div class="dh-kpi-label">WAU</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value">14,830</div>
+            <div class="dh-kpi-delta up">▲ +3.9% <span>vs last week</span></div>
+          </div>
+          <div class="dh-spark">sparkline</div>
+        </div>
+      </div>
+      <div class="dh-kpi accent-green">
+        <div class="dh-kpi-label">MAU</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value">42,016</div>
+            <div class="dh-kpi-delta up">▲ +5.1% <span>vs last month</span></div>
+          </div>
+          <div class="dh-spark">sparkline</div>
+        </div>
+      </div>
+      <div class="dh-kpi accent-amber">
+        <div class="dh-kpi-label">Avg. Session</div>
+        <div class="dh-kpi-row">
+          <div class="dh-kpi-main">
+            <div class="dh-kpi-value">4m 12s</div>
+            <div class="dh-kpi-delta down">▼ −14s <span>vs last week</span></div>
+          </div>
+          <div class="dh-spark">sparkline</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dh-grid">
+      <div class="dh-card dh-col-8">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Growth</div>
+            <h3 class="dh-card-title">USER ACQUISITION</h3>
+          </div>
+          <a class="dh-card-action" href="#">Filter ↗</a>
+        </div>
+        <div class="dh-chart tall dh-chart-live"><h-block name="v_tab_acquisition" /></div>
+      </div>
+      <div class="dh-card dh-col-4">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Mix</div>
+            <h3 class="dh-card-title">DEVICE SPLIT</h3>
+          </div>
+        </div>
+        <div class="dh-chart tall dh-chart-live"><h-block name="v_tab_donut" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ----- ACTIVITY ----- -->
+  <section class="dh-panel" id="dh-panel-activity">
+    <div class="dh-header">
+      <div>
+        <h1 class="dh-title">ACTIVITY</h1>
+        <p class="dh-subtitle">REPORTS · AUDIT LOG</p>
+      </div>
+      <div class="dh-date-pill">📅 <b>Last 7 days</b></div>
+    </div>
+
+    <div class="dh-grid">
+      <div class="dh-card dh-col-12">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Generated</div>
+            <h3 class="dh-card-title">RECENT REPORTS</h3>
+          </div>
+          <a class="dh-card-action" href="#">New report ↗</a>
+        </div>
+        <table class="dh-table">
+          <thead>
+            <tr>
+              <th>Report</th>
+              <th>Type</th>
+              <th>Generated</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Q4 Revenue Summary</td><td>Financial</td><td>2 hours ago</td><td><span class="dh-tag ready">Ready</span></td></tr>
+            <tr><td>User Acquisition Report</td><td>Marketing</td><td>1 day ago</td><td><span class="dh-tag ready">Ready</span></td></tr>
+            <tr><td>Churn Analysis</td><td>Retention</td><td>3 days ago</td><td><span class="dh-tag ready">Ready</span></td></tr>
+            <tr><td>Product Performance</td><td>Operational</td><td>1 week ago</td><td><span class="dh-tag archived">Archived</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="dh-card dh-col-12">
+        <div class="dh-card-header">
+          <div>
+            <div class="dh-card-eyebrow">Volume</div>
+            <h3 class="dh-card-title">REPORT TIMELINE</h3>
+          </div>
+        </div>
+        <div class="dh-chart short dh-chart-live"><h-block name="v_tab_bar" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== TABS (DOM last for sibling selector) =================== -->
+  <nav class="dh-tabs">
+    <a class="dh-tab" href="#dh-panel-summary">Summary</a>
+    <a class="dh-tab dh-tab-live" href="#dh-panel-performance">Performance</a>
+    <a class="dh-tab" href="#dh-panel-breakdown">Breakdown</a>
+    <a class="dh-tab" href="#dh-panel-activity">Activity</a>
+  </nav>
+</div>
+    ;;
+  }
+}

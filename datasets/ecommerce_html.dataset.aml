@@ -1,0 +1,86 @@
+@tag('Trust/Endorsed')
+Dataset ecommerce {
+  label: 'Ecommerce'
+  description: '''
+  '''
+  data_source_name: 'demodb'
+  models: [
+    ecommerce_products,
+    ecommerce_users,
+    ecommerce_countries,
+    ecommerce_orders,
+    ecommerce_cities,
+    ecommerce_order_items
+  ]
+  relationships: [
+    relationship(ecommerce_orders.user_id > ecommerce_users.id, true)
+    ,
+    relationship(ecommerce_users.city_id > ecommerce_cities.id, true)
+    ,
+    relationship(ecommerce_cities.country_code > ecommerce_countries.code, true)
+    ,
+    relationship(ecommerce_order_items.product_id > ecommerce_products.id, true)
+    ,
+    relationship(ecommerce_order_items.order_id > ecommerce_orders.id, true)
+  ]
+  owner: 'di.hoang@holistics.io'
+  metric gross_sales {
+    label: "Gross sales"
+    type: "number"
+    hidden: false
+    description: 'The total value of all products sold before any returns, cancellations, or discounts.'
+    definition: @aql sum(ecommerce_order_items.quantity * ecommerce_products.price);;
+    format: "#,###"
+  }
+  metric returned_amount {
+    label: "Returned amount"
+    type: "number"
+    hidden: false
+    description: 'The total value of products that customers sent back.'
+    definition: @aql sum(ecommerce_order_items.quantity * ecommerce_products.price) | where(ecommerce_orders.status == 'refunded');;
+    format: "#,###"
+  }
+  metric cancelled_amount {
+    label: "Cancelled amount"
+    type: "number"
+    hidden: false
+    description: 'The total value of orders that were cancelled before they could be delivered.'
+    definition: @aql sum(ecommerce_order_items.quantity * ecommerce_products.price) | where(ecommerce_orders.status == 'cancelled');;
+    format: "#,###"
+  }
+  metric discount_amount {
+    label: "Discount amount"
+    type: "number"
+    hidden: false
+    description: 'The total value of discounts given to customers. '
+    definition: @aql sum(ecommerce_orders.discount);;
+    format: "#,###"
+  }
+  metric net_sales {
+    label: "Net sales"
+    type: "number"
+    hidden: false
+    description: 'Net sales = Gross sales minus all returned, cancelled and discount sales value'
+    definition: @aql gross_sales - returned_amount - cancelled_amount - discount_amount;;
+    format: "#,###"
+  }
+  metric net_sales_margin {
+    label: "Net sales margin"
+    type: "number"
+    hidden: false
+    description: 'Net sales margin = Net sales / Gross sales. Shows how much gross sales is retained after returns, cancellations, and discounts.'
+    definition: @aql safe_divide(net_sales, gross_sales) ;;
+    format: "#,###0.0%"
+  }
+  metric return_ratio {
+    label: "Return ratio"
+    type: "number"
+    hidden: false
+    description: '''
+      Potential Insights: 
+        - Product quality issue: If the return ratio of a particular product_id is higher than 30%, it means the product has quality issues, or the product description is not accurate. 
+    '''
+    definition: @aql safe_divide(returned_amount,gross_sales) ;;
+    format: "#,###0.0%"
+  }
+}

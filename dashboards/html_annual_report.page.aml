@@ -1,0 +1,1107 @@
+PageTheme my_theme {
+  title: "My Theme"
+  block {
+    background {
+      bg_color: "transparent"
+    }
+    border {
+      border_width: 0;
+    }
+  }
+}
+
+Dashboard html_annual_report {
+  title: 'Annual Report'
+  description: ''
+  owner: 'thong.do@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block v_sroh: VizBlock {
+    label: 'Count of Users Id by Quarter Sign Up Date'
+    viz: ColumnChart {
+      dataset: ecommerce
+      calculation count_of_users_id {
+        label: 'Count of Users Id'
+        formula: @aql count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_users.sign_up_date)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        settings {
+          hidden: true
+        }
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_users_id'
+            format {
+              type: 'number'
+              pattern: 'none'
+            }
+          }
+          settings {
+            color: '#1a3a5c'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_gender_donut: VizBlock {
+    label: 'Gender'
+    viz: PieChart {
+      dataset: ecommerce
+      calculation user_count {
+        label: ' '
+        formula: @aql ecommerce_users | count(ecommerce_users.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      legend: VizFieldFull {
+        label: 'Gender'
+        ref: r(ecommerce_users.gender)
+        format {
+          type: 'text'
+        }
+      }
+      series {
+        field: VizFieldFull {
+          label: ' '
+          ref: 'user_count'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+        }
+        settings {
+          point {
+            value: 'm'
+            color: '#1a3a5c'
+          }
+          point {
+            value: 'f'
+            color: '#4d7498'
+          }
+        }
+      }
+      settings {
+        display_as_donut: true
+        row_limit: 100
+        sort: 'desc'
+        show_data_label: true
+        data_label_position: 'none'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_dd7r: VizBlock {
+    label: 'Returned amount and Cancelled amount by Quarter Created At'
+    viz: AreaChart {
+      dataset: ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        settings {
+          stack_series_by: 'percentage'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce.returned_amount)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#e63222'
+            color_palette: 0
+          }
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce.cancelled_amount)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#1a3a5c'
+            color_palette: 0
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_5eey: VizBlock {
+    label: 'Gross sales'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce.gross_sales)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_active_clients: VizBlock {
+    label: 'Active Clients'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce_users.id)
+        aggregation: 'count'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_gross_margin: VizBlock {
+    label: 'Gross Margin'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce.net_sales_margin)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_nps: VizBlock {
+    label: 'NPS Score'
+    viz: MetricKpi {
+      dataset: ecommerce
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce.return_ratio)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_cpu: VizBlock {
+    label: 'Cost Per Unit'
+    viz: AreaChart {
+      dataset: ecommerce
+      calculation avg_discount_per_order {
+        label: 'Cost Per Unit'
+        formula: @aql ecommerce_orders | avg(ecommerce_orders.discount);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        settings {
+          hidden: true
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Cost Per Unit'
+            ref: 'avg_discount_per_order'
+            format {
+              type: 'number'
+              pattern: '#,###0.00'
+            }
+          }
+          settings {
+            color: '#1a3a5c'
+          }
+        }
+      }
+      settings {
+        row_limit: 20
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_churn: VizBlock {
+    label: 'Churn Rate'
+    viz: AreaChart {
+      dataset: ecommerce
+      calculation gross_sales_calc {
+        label: 'Gross Sales'
+        formula: @aql ecommerce_orders.total_charge;;
+        calc_type: 'measure'
+        data_type: 'number'
+        model: ecommerce_orders
+      }
+      calculation returned_amount_calc {
+        label: 'Returned Amount'
+        formula: @aql ecommerce_orders | sum(ecommerce_orders.discount);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation churn_rate_calc {
+        label: 'Churn Rate'
+        formula: @aql returned_amount_calc * 1.0 / gross_sales;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        settings {
+          hidden: true
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Churn Rate'
+            ref: 'churn_rate_calc'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#e63222'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        row_limit: 500
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_deal_vel: VizBlock {
+    label: 'Deal Velocity'
+    viz: BarChart {
+      dataset: ecommerce
+      calculation order_count {
+        label: 'Order Count'
+        formula: @aql ecommerce_orders | count(ecommerce_orders.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(ecommerce_orders.status)
+        operator: 'is'
+        value: [
+          'delivered',
+          'cancelled',
+          'refunded'
+        ]
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_orders.status)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            label: 'Order Count'
+            ref: 'order_count'
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            point {
+              value: 'delivered'
+              color: '#1a3a5c'
+            }
+            point {
+              value: 'cancelled'
+              color: '#e63222'
+            }
+            point {
+              value: 'refunded'
+              color: '#8a8278'
+            }
+          }
+        }
+        settings {
+          stack_series_by: 'value'
+        }
+      }
+      settings {
+        legend_label: 'hidden'
+        sort: LineFamilySort {
+          type: 'xaxis'
+          direction: 'asc'
+        }
+        row_limit: 500
+        aggregate_awareness {
+          enabled: true
+          debug_comments: false
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+
+  view: HTMLLayout {
+    content: @html 
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f7f4ef;
+    --accent: #e63222;
+    --accent-2: #1a3a5c;
+    --muted: #8a8278;
+    --rule: #d4cfc8;
+    --chart-bg: #edeae4;
+    --chart-border: #c8c3bb;
+    --page-w: 210mm;
+    --page-h: 297mm;
+    --margin: 14mm;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #d0ccc6;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── PAGE SHELL ── */
+  .page {
+    width: var(--page-w);
+    min-height: var(--page-h);
+    background: var(--paper);
+    margin: 24px auto;
+    padding: var(--margin);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,.18);
+  }
+
+  /* Decorative corner accent */
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 52mm; height: 52mm;
+    background: var(--accent-2);
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+    z-index: 0;
+  }
+
+  /* Bottom rule bar */
+  .page::after {
+    content: '';
+    position: absolute;
+    bottom: 10mm; left: var(--margin); right: var(--margin);
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10mm;
+    padding-bottom: 5mm;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .report-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42pt;
+    line-height: .9;
+    letter-spacing: .02em;
+    color: var(--ink);
+  }
+
+  .report-title span {
+    display: block;
+    font-size: 13pt;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2mm;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 7pt;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .header-meta strong {
+    display: block;
+    font-size: 9pt;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 1mm;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2mm;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18pt;
+    letter-spacing: .04em;
+    color: var(--accent-2);
+    margin-bottom: 4mm;
+    line-height: 1.1;
+  }
+
+  /* ── STAT STRIP ── */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1.5px solid var(--ink);
+    margin-bottom: 8mm;
+  }
+
+  .stat-item {
+    padding: 4mm 5mm;
+    border-right: 1.5px solid var(--ink);
+  }
+  .stat-item:last-child { border-right: none; }
+
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26pt;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .stat-value.accent { color: var(--accent); }
+
+  .stat-value .h-kpi-metric-kpi,
+  .stat-value .h-kpi-metric-kpi * {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 26pt !important;
+    font-weight: 400 !important;
+    color: var(--ink) !important;
+    line-height: 1 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .stat-value.accent .h-kpi-metric-kpi,
+  .stat-value.accent .h-kpi-metric-kpi * {
+    color: var(--accent) !important;
+  }
+
+  .stat-label {
+    font-size: 6.5pt;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 1mm;
+    font-weight: 500;
+  }
+
+  .stat-delta {
+    font-family: 'DM Mono', monospace;
+    font-size: 7pt;
+    color: #2d8a4e;
+    margin-top: .5mm;
+  }
+  .stat-delta.neg { color: var(--accent); }
+
+  /* ── TWO-COL GRID ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6mm;
+    margin-bottom: 8mm;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6mm;
+    margin-bottom: 8mm;
+  }
+
+  /* ── CHART PLACEHOLDER ── */
+  .chart-placeholder {
+    /*background: var(--chart-bg); 
+    border: 1.5px dashed var(--chart-border);*/
+    
+    border-radius: 1mm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2mm;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle grid lines inside chart area */
+  /*.chart-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--chart-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--chart-border) 1px, transparent 1px);
+    background-size: 12mm 10mm;
+    opacity: .4;
+  }*/
+
+  .chart-placeholder .chart-icon {
+    font-size: 22pt;
+    opacity: .35;
+    position: relative;
+    z-index: 1;
+  }
+
+  .chart-placeholder .chart-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  .chart-placeholder .chart-size {
+    font-size: 6pt;
+    color: var(--chart-border);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Preset heights */
+  .h-40  { height: 40mm; }
+  .h-50  { height: 50mm; }
+  .h-60  { height: 60mm; }
+  .h-70  { height: 70mm; }
+  .h-80  { height: 80mm; }
+  .h-100 { height: 100mm; }
+
+  /* ── TEXT BLOCK ── */
+  .body-text {
+    font-size: 8pt;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 4mm;
+  }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    padding: 3mm 4mm;
+    background: rgba(230,50,34,.05);
+    font-size: 8pt;
+    line-height: 1.6;
+    margin-bottom: 4mm;
+  }
+
+  .callout strong {
+    display: block;
+    font-size: 9pt;
+    color: var(--accent);
+    margin-bottom: 1mm;
+  }
+
+  /* ── WIDE CHART WRAPPER (spans cols) ── */
+  .full-width { margin-bottom: 8mm; }
+  .full-width .section-label { margin-top: 0; }
+
+  /* ── DIVIDER ── */
+  hr.ruled {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 5mm 0;
+  }
+
+  /* ── PAGE FOOTER ── */
+  .page-footer {
+    position: absolute;
+    bottom: 6mm;
+    left: var(--margin);
+    right: var(--margin);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 9pt;
+    letter-spacing: .1em;
+    color: var(--muted);
+  }
+
+  .footer-page {
+    font-family: 'DM Mono', monospace;
+    font-size: 7pt;
+    color: var(--muted);
+  }
+
+  .footer-page span {
+    display: inline-block;
+    background: var(--accent-2);
+    color: #fff;
+    padding: 0 2mm;
+    font-weight: 500;
+  }
+
+  /* ── PAGE 2 ACCENT COLOR SWAP ── */
+  .page-2::before {
+    background: var(--accent);
+    width: 40mm; height: 40mm;
+  }
+
+  /* ── LEGEND ROW ── */
+  .legend {
+    display: flex;
+    gap: 4mm;
+    flex-wrap: wrap;
+    margin-bottom: 3mm;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5mm;
+    font-size: 6.5pt;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .legend-dot {
+    width: 2.5mm; height: 2.5mm;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── TABLE ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.5pt;
+    margin-bottom: 6mm;
+  }
+  .data-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    border-bottom: 1.5px solid var(--ink);
+    padding: 2mm 2.5mm;
+    text-align: left;
+  }
+  .data-table td {
+    padding: 2mm 2.5mm;
+    border-bottom: 1px solid var(--rule);
+    color: #222;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .num { text-align: right; font-family: 'DM Mono', monospace; }
+  .data-table .pill {
+    display: inline-block;
+    padding: 0 2mm;
+    border-radius: 2mm;
+    font-size: 6pt;
+    font-weight: 600;
+  }
+  .pill.up   { background: #d4f0e0; color: #1a6b3a; }
+  .pill.down { background: #fde8e6; color: #a01a10; }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: none; }
+    .page { margin: 0; box-shadow: none; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+  }
+</style>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 1
+═══════════════════════════════════════════ -->
+<div class="page">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="report-title">
+      Annual Report
+      <span>Company Name · FY 2025</span>
+    </div>
+    <div class="header-meta">
+      <strong>CONFIDENTIAL</strong>
+      Prepared by: Author Name<br>
+      Date: May 20, 2025<br>
+      Version: 1.0
+    </div>
+  </header>
+
+  <!-- KPI Strip -->
+  <div class="stat-strip">
+    <div class="stat-item">
+      <div class="stat-value accent">
+        <h-block name="v_5eey" />
+      </div>
+      <div class="stat-label">Total Revenue</div>
+      <div class="stat-delta">▲ +18.4% YoY</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">
+        <h-block name="v_active_clients" />
+      </div>
+      <div class="stat-label">Active Clients</div>
+      <div class="stat-delta">▲ +9.1% YoY</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">
+        <h-block name="v_gross_margin" />
+      </div>
+      <div class="stat-label">Gross Margin</div>
+      <div class="stat-delta neg">▼ −2.3pp YoY</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">
+        <h-block name="v_nps" />
+      </div>
+      <div class="stat-label">NPS Score</div>
+      <div class="stat-delta">▲ +6 pts YoY</div>
+    </div>
+  </div>
+
+  <!-- Row 1: Wide chart + small callout -->
+  <div style="margin-bottom:8mm;">
+    <div class="section-label">Revenue Performance</div>
+    <div class="section-title">Monthly Revenue Trend — FY 2025</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1a3a5c"></div>Revenue</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e63222"></div>Target</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#aac8e8"></div>Prior Year</div>
+    </div>
+    <!-- CHART PLACEHOLDER: Replace the div below with your chart canvas/svg -->
+    <div class="chart-placeholder h-60" id="chart-revenue-trend">
+      <div style="width: 100%;" class="h-60">
+      <h-block name="v_sroh" />
+      </div>
+    </div>
+    
+  </div>
+
+  
+
+  <!-- Row 2: Two charts side by side -->
+  <div class="two-col">
+    <div>
+      <div class="section-label">Revenue Mix</div>
+      <div class="section-title">By Segment</div>
+      <!-- CHART PLACEHOLDER -->
+      <div class="chart-placeholder h-50" id="chart-segment-donut">
+        <h-block name="v_gender_donut" />
+      </div>
+      <div class="callout">
+        <strong>Key Insight</strong>
+        Replace this text with a data-driven observation pulled from the chart above.
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Acquisition</div>
+      <div class="section-title">New vs Returning</div>
+      <!-- CHART PLACEHOLDER -->
+      <style>
+      #chart-acq-bar > div > div {
+      width: 100% !important
+      
+      }
+      </style>
+      <div class="chart-placeholder h-50" id="chart-acq-bar">
+        <h-block name="v_dd7r" />
+      </div>
+      <div class="body-text">
+        Brief contextual copy here. Keep it to 2–3 sentences max so it doesn't compete with the visuals.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <div class="footer-brand">Company Name</div>
+    <div class="footer-page">Page <span>01</span> / 02</div>
+  </footer>
+
+</div><!-- /page 1 -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 2
+═══════════════════════════════════════════ -->
+<div class="page page-2">
+
+  <!-- Header (lighter on page 2) -->
+  <header class="page-header">
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:18pt; letter-spacing:.06em; color:var(--accent-2);">
+      Operational Review &amp; Outlook
+    </div>
+    <div class="header-meta">
+      <strong>Annual Report · FY 2025</strong>
+      Company Name
+    </div>
+  </header>
+
+  <!-- Three small KPI charts -->
+  <div class="three-col" style="margin-bottom:8mm;">
+    <div>
+      <div class="section-label">Efficiency</div>
+      <div class="section-title" style="font-size:12pt;">Cost per Unit</div>
+      <!-- CHART PLACEHOLDER -->
+      <div class="chart-placeholder h-40" id="chart-cpu">
+        <h-block name="v_cpu" />
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Retention</div>
+      <div class="section-title" style="font-size:12pt;">Churn Rate</div>
+      <!-- CHART PLACEHOLDER -->
+      <div class="chart-placeholder h-40" id="chart-churn">
+        <h-block name="v_churn" />
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Pipeline</div>
+      <div class="section-title" style="font-size:12pt;">Deal Velocity</div>
+      <!-- CHART PLACEHOLDER -->
+      <div class="chart-placeholder h-40" id="chart-pipeline">
+        <h-block name="v_deal_vel" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Regional breakdown table + map -->
+  <div class="two-col" style="margin-bottom:8mm; align-items:start;">
+    <div>
+      <div class="section-label">Geography</div>
+      <div class="section-title">Revenue by Region</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Region</th>
+            <th class="num">Revenue</th>
+            <th class="num">Share</th>
+            <th>YoY</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>North America</td>
+            <td class="num">$1.84M</td>
+            <td class="num">43.8%</td>
+            <td><span class="pill up">+21%</span></td>
+          </tr>
+          <tr>
+            <td>Europe</td>
+            <td class="num">$1.12M</td>
+            <td class="num">26.7%</td>
+            <td><span class="pill up">+14%</span></td>
+          </tr>
+          <tr>
+            <td>Asia Pacific</td>
+            <td class="num">$0.84M</td>
+            <td class="num">20.0%</td>
+            <td><span class="pill up">+31%</span></td>
+          </tr>
+          <tr>
+            <td>Rest of World</td>
+            <td class="num">$0.40M</td>
+            <td class="num">9.5%</td>
+            <td><span class="pill down">−3%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="body-text">
+        Replace table data with actuals. Add or remove rows as needed.
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Visualization</div>
+      <div class="section-title">Geographic Map</div>
+      <!-- CHART PLACEHOLDER -->
+      <div class="chart-placeholder h-70" id="chart-geo-map">
+        <div class="chart-icon">🌍</div>
+        <div class="chart-type">Choropleth / Bubble Map</div>
+        <div class="chart-size">Half width · 70mm</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom: Wide scatter / forecast chart -->
+  <div class="full-width">
+    <div class="section-label">Forward Look</div>
+    <div class="section-title">FY 2026 Revenue Forecast</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1a3a5c"></div>Actual</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e63222;opacity:.5"></div>Forecast</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ccc"></div>Confidence Band</div>
+    </div>
+    <!-- CHART PLACEHOLDER -->
+    <div class="chart-placeholder h-50" id="chart-forecast">
+      <div class="chart-icon">🔮</div>
+      <div class="chart-type">Line + Confidence Interval</div>
+      <div class="chart-size">Full width · 50mm</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <div class="footer-brand">Company Name</div>
+    <div class="footer-page">Page <span>02</span> / 02</div>
+  </footer>
+
+</div><!-- /page 2 -->
+
+    
+    ;;
+  }
+
+  theme: my_theme
+}
