@@ -2,7 +2,6 @@ Dashboard html_tabbed_report {
   title: 'Tabbed Report'
   description: ''
   owner: 'di.hoang@holistics.io'
-
   theme: my_theme
   block v_tab_trend: VizBlock {
     label: 'User signups by quarter'
@@ -443,7 +442,6 @@ Dashboard html_tabbed_report {
       value: '1/1/2020 - 12/31/2026'
     }
   }
-
   view: HTMLLayout {
     content: @html
 <!-- ============================================================
@@ -1465,5 +1463,11 @@ Dashboard html_tabbed_report {
   </nav>
 </div>
     ;;
+  }
+  settings {
+    timezone: 'Etc/UTC'
+    cache_duration: 1440
+    autorun_on_open: true
+    autorun_on_changes: true
   }
 }
