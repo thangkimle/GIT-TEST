@@ -125,6 +125,50 @@ Dashboard html_newspaper {
       hide_label: true
     }
   }
+  block v_3fjd: VizBlock {
+    label: 'Returned amount, Cancelled amount and 2 more'
+    viz: DataTable {
+      dataset: ecommerce
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce.returned_amount)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce.cancelled_amount)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce.discount_amount)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce.net_sales)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
 
   view: HTMLLayout {
     content: @html 
@@ -138,18 +182,18 @@ Dashboard html_newspaper {
     color: #1a1510;
     font-family: 'Source Serif 4', Georgia, serif;
     width: 100%;
-    max-width: 960px;
+    max-width: 1344px;
     box-sizing: border-box;
     margin: 0 auto;
   }
   .np-masthead {
     border-bottom: 3px double #1a1510;
-    padding: 12px 20px 8px;
+    padding: 17px 28px 11px;
     text-align: center;
   }
   .np-masthead-name {
     font-family: 'UnifrakturMaguntia', serif;
-    font-size: 42px;
+    font-size: 59px;
     line-height: 1;
     color: #1a1510;
     letter-spacing: 1px;
@@ -158,22 +202,22 @@ Dashboard html_newspaper {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: #7a6e5f;
-    margin-top: 6px;
+    margin-top: 8px;
     border-top: 0.5px solid #c9bfa8;
-    padding-top: 6px;
+    padding-top: 8px;
   }
   .np-ticker {
     background: #1a1510;
     color: #f7f3eb;
     font-family: 'Source Serif 4', serif;
-    font-size: 11px;
-    padding: 4px 20px;
+    font-size: 15px;
+    padding: 6px 28px;
     display: flex;
-    gap: 32px;
+    gap: 45px;
     overflow: hidden;
   }
   .np-ticker span { white-space: nowrap; }
@@ -188,35 +232,37 @@ Dashboard html_newspaper {
     background: #ede8dc;
   }
   .np-stat {
-    padding: 10px 16px;
+    padding: 14px 22px;
     border-right: 0.5px solid #c9bfa8;
     text-align: center;
   }
   .np-stat:last-child { border-right: none; }
   .np-stat-label {
-    font-size: 9px;
+    font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: #7a6e5f;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
   .np-stat-value {
     font-family: 'Playfair Display', serif;
-    font-size: 20px;
+    font-size: 28px;
     font-weight: 700;
     color: #1a1510;
   }
-  .np-stat-change { font-size: 10px; margin-top: 2px; }
+  .np-stat-change { font-size: 14px; margin-top: 3px; }
   .up { color: #2e7d3c; }
   .dn { color: #b83232; }
 
   .np-body {
     display: grid;
     grid-template-columns: 1fr 0.5px 2fr 0.5px 1fr;
-    padding: 0 16px;
+    padding: 0 22px;
     border-bottom: 1px solid #c9bfa8;
+    width: 100%;
+    margin: 0 auto;
   }
-  .np-col-divider { background: #c9bfa8; margin: 12px 0; }
+  .np-col-divider { background: #c9bfa8; margin: 17px 0; }
   .np-col { padding: 14px 16px; }
   .np-col-main { padding: 14px 20px; }
 
@@ -245,7 +291,7 @@ Dashboard html_newspaper {
   }
   .np-headline-xs {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1.25;
     color: #1a1510;
@@ -259,8 +305,8 @@ Dashboard html_newspaper {
     margin-bottom: 8px;
   }
   .np-body-text {
-    font-size: 12px;
-    line-height: 1.7;
+    font-size: 16px;
+    line-height: 1.75;
     color: #3a3020;
     text-align: justify;
   }
@@ -366,6 +412,7 @@ Dashboard html_newspaper {
     letter-spacing: 1px;
     color: #b8ad98;
     background: #f0ebe0;
+    margin-top: 0;
   }
 </style>
 
@@ -540,5 +587,5 @@ Dashboard html_newspaper {
     
     ;;
   }
-  theme: H.themes.vanilla
+  theme: my_theme
 }
