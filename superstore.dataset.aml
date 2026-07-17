@@ -1,0 +1,68 @@
+Dataset Superstore {
+  label: 'Superstore'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    superstore
+  ]
+  relationships: []
+
+  view {
+        group metrics {
+      metric total_sales
+      metric total_profit
+      metric total_order
+    }
+
+    model superstore {
+
+      group order {
+        field order_id
+        field order_date
+        field ship_date
+        field ship_mode
+        field ship_status
+        field category
+        field sub_category
+        field quantity
+        field discount
+      }
+
+      group location {
+        field country
+        field region
+        field state
+        field city
+      }
+    }
+
+
+  }
+
+  metric total_sales {
+    label: "Total Sales"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql sum(superstore.sales);;
+    format: ""
+  }
+
+  metric total_profit {
+    label: "Total Profit"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql sum(superstore.profit);;
+    format: ""
+  }
+
+  metric total_order {
+    label: "Count Orders"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql count_distinct(superstore.order_id);;
+    format: ""
+  }
+}

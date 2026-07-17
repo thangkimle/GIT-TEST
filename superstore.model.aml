@@ -1,0 +1,233 @@
+Model superstore {
+  type: 'table'
+  label: 'Superstore'
+  description: ''
+  data_source_name: 'demodb'
+  dimension days_to_ship_actual {
+    label: 'Days to ship actual'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.days_to_ship_actual }};;
+  }
+  dimension sales_forecast {
+    label: 'Sales forecast'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales_forecast }};;
+  }
+  dimension ship_status {
+    label: 'Ship status'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.ship_status }};;
+  }
+  dimension days_to_ship_scheduled {
+    label: 'Days to ship scheduled'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.days_to_ship_scheduled }};;
+  }
+  dimension sales_per_customer {
+    label: 'Sales per customer'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales_per_customer }};;
+  }
+  dimension profit_ratio {
+    label: 'Profit ratio'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.profit_ratio }};;
+  }
+  dimension category {
+    label: 'Category'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.category }};;
+  }
+  dimension city {
+    label: 'City'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.city }};;
+  }
+  dimension country {
+    label: 'Country'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.country }};;
+  }
+  dimension customer_name {
+    label: 'Customer name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.customer_name }};;
+  }
+  dimension days_to_ship_actual_bin {
+    label: 'Days to ship actual bin'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.days_to_ship_actual_bin }};;
+  }
+  dimension discount {
+    label: 'Discount'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.discount }};;
+  }
+  dimension number_of_records {
+    label: 'Number of records'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.number_of_records }};;
+  }
+  dimension order_date {
+    label: 'Order date'
+    description: ''
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_date }};;
+  }
+  dimension order_id {
+    label: 'Order'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_id }};;
+  }
+  dimension postal_code {
+    label: 'Postal code'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.postal_code }};;
+  }
+  dimension product_name {
+    label: 'Product name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_name }};;
+  }
+  dimension profit {
+    label: 'Profit'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.profit }};;
+  }
+  dimension quantity {
+    label: 'Quantity'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.quantity }};;
+  }
+  dimension region {
+    label: 'Region'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.region }};;
+  }
+  dimension sales_bin {
+    label: 'Sales bin'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales_bin }};;
+  }
+  dimension sales {
+    label: 'Sales'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales }};;
+  }
+  dimension segment {
+    label: 'Segment'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.segment }};;
+  }
+  dimension ship_date {
+    label: 'Ship date'
+    description: ''
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.ship_date }};;
+  }
+  dimension ship_mode {
+    label: 'Ship mode'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.ship_mode }};;
+  }
+  dimension state {
+    label: 'State'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.state }};;
+  }
+  dimension sub_category {
+    label: 'Sub category'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.sub_category }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'superstore.csv'
+    uploaded_at: '2026-07-17 03:52:58'
+    hash: 'deec957dec297936ee42500e55aef4d1a0c1e6e226aed756925702aafac74eeb'
+    column_configs: [
+      H.imports.column_config("days_to_ship_actual", "days_to_ship_actual", "number"),
+      H.imports.column_config("sales_forecast", "sales_forecast", "number"),
+      H.imports.column_config("ship_status", "ship_status", "text"),
+      H.imports.column_config("days_to_ship_scheduled", "days_to_ship_scheduled", "number"),
+      H.imports.column_config("sales_per_customer", "sales_per_customer", "text"),
+      H.imports.column_config("profit_ratio", "profit_ratio", "text"),
+      H.imports.column_config("category", "category", "text"),
+      H.imports.column_config("city", "city", "text"),
+      H.imports.column_config("country", "country", "text"),
+      H.imports.column_config("customer_name", "customer_name", "text"),
+      H.imports.column_config("days_to_ship_actual_bin", "days_to_ship_actual_bin", "number"),
+      H.imports.column_config("discount", "discount", "number"),
+      H.imports.column_config("number_of_records", "number_of_records", "number"),
+      H.imports.column_config("order_date", "order_date", "date"),
+      H.imports.column_config("order_id", "order_id", "text"),
+      H.imports.column_config("postal_code", "postal_code", "number"),
+      H.imports.column_config("product_name", "product_name", "text"),
+      H.imports.column_config("profit", "profit", "number"),
+      H.imports.column_config("quantity", "quantity", "number"),
+      H.imports.column_config("region", "region", "text"),
+      H.imports.column_config("sales_bin", "sales_bin", "text"),
+      H.imports.column_config("sales", "sales", "number"),
+      H.imports.column_config("segment", "segment", "text"),
+      H.imports.column_config("ship_date", "ship_date", "date"),
+      H.imports.column_config("ship_mode", "ship_mode", "text"),
+      H.imports.column_config("state", "state", "text"),
+      H.imports.column_config("sub_category", "sub_category", "text")
+    ]
+  }
+  owner: 'giang.nv@holistics.io'
+  table_name: '"dbt_khai"."holistics_superstore_0f0c6_202607170352"'
+}
