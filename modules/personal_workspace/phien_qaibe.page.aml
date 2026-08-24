@@ -2,7 +2,7 @@ Dashboard phien_qaibe {
   title: 'Phien'
   owner: 'phien.pham@holistics.io'
   block t_ihpf: TextBlock {
-    content: @md Test;;
+    content: @md Test 2;;
   }
   interactions: []
   view: CanvasLayout {
