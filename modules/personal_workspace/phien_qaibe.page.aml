@@ -1,0 +1,27 @@
+Dashboard phien_qaibe {
+  title: 'Phien'
+  owner: 'phien.pham@holistics.io'
+  block t_ihpf: TextBlock {
+    content: @md Test;;
+  }
+  interactions: []
+  view: CanvasLayout {
+    label: 'Canvas Layout'
+    width: 620
+    height: 420
+    grid_size: 20
+    auto_expand_vertically: true
+    block t_ihpf {
+      position: pos(20, 20, 580, 380)
+      layer: 1
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: H.themes.vanilla
+  settings {
+    cache_duration: 1440
+    autorun_on_open: true
+  }
+}
