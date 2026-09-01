@@ -75,6 +75,7 @@ Dashboard lepaya_2 {
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_answer'
         }
       ]
       settings {
@@ -86,10 +87,15 @@ Dashboard lepaya_2 {
           enabled: true
           debug_comments: true
         }
+        column_styles: [
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_answer'
+            width: 65
+          }
+        ]
       }
     }
   }
-
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
@@ -100,12 +106,11 @@ Dashboard lepaya_2 {
       position: pos(20, 20, 1260, 60)
     }
     block v_mwx0 {
-      position: pos(90, 10, 620, 420)
+      position: pos(100, 20, 840, 420)
     }
     mobile {
       mode: 'auto'
     }
   }
-
   theme: H.themes.vanilla
 }
