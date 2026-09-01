@@ -1,0 +1,105 @@
+Model audit_responses_2026_csv {
+  type: 'table'
+  label: 'Audit responses 2026 csv'
+  description: ''
+  data_source_name: 'demodb'
+  dimension company {
+    label: 'Company'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.company }};;
+  }
+  dimension first_name {
+    label: 'First name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.first_name }};;
+  }
+  dimension last_name {
+    label: 'Last name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.last_name }};;
+  }
+  dimension program {
+    label: 'Program'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.program }};;
+  }
+  dimension wave {
+    label: 'Wave'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.wave }};;
+  }
+  dimension module {
+    label: 'Module'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.module }};;
+  }
+  dimension classroom_starts_at {
+    label: 'Classroom starts at'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.classroom_starts_at }};;
+  }
+  dimension questionnaire {
+    label: 'Questionnaire'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.questionnaire }};;
+  }
+  dimension questionnaire_submitted_at {
+    label: 'Questionnaire submitted at'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.questionnaire_submitted_at }};;
+  }
+  dimension question {
+    label: 'Question'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.question }};;
+  }
+  dimension answer {
+    label: 'Answer'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.answer }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'audit_responses_2026.csv'
+    uploaded_at: '2026-09-01 11:01:14'
+    hash: '84e3ff00af73f0f62ddf182fcb0484f0ebd98878b25b67037ab5fbda6bd79f9f'
+    column_configs: [
+      H.imports.column_config("company", "company", "text"),
+      H.imports.column_config("first_name", "first_name", "text"),
+      H.imports.column_config("last_name", "last_name", "text"),
+      H.imports.column_config("program", "program", "text"),
+      H.imports.column_config("wave", "wave", "text"),
+      H.imports.column_config("module", "module", "text"),
+      H.imports.column_config("classroom_starts_at", "classroom_starts_at", "datetime"),
+      H.imports.column_config("questionnaire", "questionnaire", "text"),
+      H.imports.column_config("questionnaire_submitted_at", "questionnaire_submitted_at", "datetime"),
+      H.imports.column_config("question", "question", "text"),
+      H.imports.column_config("answer", "answer", "text")
+    ]
+  }
+  owner: 'uyen.nm@holistics.io'
+  table_name: '"dbt_khai"."holistics_audit_respons_b0538_202609011101"'
+}

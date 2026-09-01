@@ -1,0 +1,111 @@
+Dashboard lepaya_2 {
+  title: 'lepaya'
+  description: ''
+  owner: 'uyen.nm@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block v_mwx0: VizBlock {
+    label: 'Company, First name and 9 more'
+    viz: DataTable {
+      dataset: lepaya
+      fields: [
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.company)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.first_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.last_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.program)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.wave)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.module)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.classroom_starts_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.questionnaire)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.questionnaire_submitted_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.question)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.answer)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        wrap_header_text: true
+        wrap_cell_text: true
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 800
+    grid_size: 20
+    auto_expand_vertically: true
+    block title {
+      position: pos(20, 20, 1260, 60)
+    }
+    block v_mwx0 {
+      position: pos(90, 10, 620, 420)
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+
+  theme: H.themes.vanilla
+}
