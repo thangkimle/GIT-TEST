@@ -15,66 +15,77 @@ Dashboard lepaya_2 {
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_company'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.first_name)
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_first_name'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.last_name)
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_last_name'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.program)
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_program'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.wave)
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_wave'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.module)
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_module'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.classroom_starts_at)
           format {
             type: 'datetime'
           }
+          uname: 'audit_responses_2026_csv_classroom_starts_at'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.questionnaire)
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_questionnaire'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.questionnaire_submitted_at)
           format {
             type: 'datetime'
           }
+          uname: 'audit_responses_2026_csv_questionnaire_submitted_at'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.question)
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_question'
         },
         VizFieldFull {
           ref: r(audit_responses_2026_csv.answer)
           format {
             type: 'text'
           }
+          uname: 'audit_responses_2026_csv_answer'
         }
       ]
       settings {
@@ -86,10 +97,55 @@ Dashboard lepaya_2 {
           enabled: true
           debug_comments: true
         }
+        column_styles: [
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_answer'
+            width: 934
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_company'
+            width: 50
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_first_name'
+            width: 40
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_last_name'
+            width: 39
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_program'
+            width: 56
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_wave'
+            width: 76
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_module'
+            width: 90
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_classroom_starts_at'
+            width: 58
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_questionnaire'
+            width: 65
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_questionnaire_submitted_at'
+            width: 74
+          },
+          ColumnStyle {
+            key: 'audit_responses_2026_csv_question'
+            width: 174
+          }
+        ]
       }
     }
   }
-
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
@@ -100,12 +156,11 @@ Dashboard lepaya_2 {
       position: pos(20, 20, 1260, 60)
     }
     block v_mwx0 {
-      position: pos(90, 10, 620, 420)
+      position: pos(20, 140, 880, 420)
     }
     mobile {
       mode: 'auto'
     }
   }
-
   theme: H.themes.vanilla
 }
