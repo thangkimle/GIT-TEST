@@ -1,4 +1,4 @@
-Dashboard html_responsive {
+Dashboard html_responsive { // test
   title: 'Responsive Dashboard'
   description: ''
   owner: 'di.hoang@holistics.io'
