@@ -3,7 +3,7 @@ Dashboard lepaya_2 {
   description: ''
   owner: 'uyen.nm@holistics.io'
   block title: TextBlock {
-    content: @md # Your title goes here ;;
+    content: @md # Test test test;;
   }
   block v_mwx0: VizBlock {
     label: 'Company, First name and 9 more'
@@ -146,10 +146,38 @@ Dashboard lepaya_2 {
       }
     }
   }
+  block v_p7xq: VizBlock {
+    label: 'First name and Last name'
+    viz: DataTable {
+      dataset: lepaya
+      fields: [
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.first_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(audit_responses_2026_csv.last_name)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
-    height: 800
+    height: 1040
     grid_size: 20
     auto_expand_vertically: true
     block title {
@@ -158,9 +186,26 @@ Dashboard lepaya_2 {
     block v_mwx0 {
       position: pos(20, 140, 880, 420)
     }
+    block v_p7xq {
+      position: pos(40, 600, 620, 420)
+    }
     mobile {
       mode: 'auto'
     }
   }
   theme: H.themes.vanilla
+  explicit_interactions: [
+    FilterInteraction {
+      from: 'v_mwx0'
+      to: [
+        'v_p7xq'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_p7xq'
+      to: [
+        'v_mwx0'
+      ]
+    }
+  ]
 }
