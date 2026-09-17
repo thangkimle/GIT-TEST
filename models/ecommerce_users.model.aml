@@ -1,4 +1,4 @@
-Model ecommerce_users { // test cai coi1
+Model ecommerce_users { // test
   type: 'table'
   label: 'Users'
   description: 'Table model for ecommerce users'
