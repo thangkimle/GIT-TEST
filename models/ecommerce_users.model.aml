@@ -1,4 +1,4 @@
-Model ecommerce_users { // test ne
+Model ecommerce_users { // test ne1
   type: 'table'
   label: 'Users'
   description: 'Table model for ecommerce users'
